@@ -1,0 +1,15 @@
+Prompt per a crear les imatges dels exercicis:
+
+Vull que generis una nova il·lustració pictogràfica per a un exercici de gimnàstica. Ha de seguir estrictament l'estil visual de la figura humana massissa i de color negre sòlid de image_3.png, sense cap mena de marc circular ni quadrat, sobre fons blanc pur.
+
+L'exercici a representar és: [Esquat amb peses].
+
+Detalls específics:
+
+
+
+Posició representativa: Mostra la figura en el punt més reconeixible de l'exercici (per exemple, a mitja remada).
+
+Equipament necessari: Incorpora els elements de material de forma esquemàtica i del mateix color negre sòlid (per exemple, la màquina de rem, les gomes elàstiques, o la banqueta).
+
+Estil pur: Sense ombres, ni relleus, ni detalls anatòmics. Ha de ser una icona universal neta i directa.

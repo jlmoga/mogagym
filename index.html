@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gimnàs Personalitzat | Catàleg d'Exercicis</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4facfe">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(reg => console.log('Service Worker registrat!', reg))
+                    .catch(err => console.error('Error SW:', err));
+            });
+        }
+    </script>
+    <header class="main-header">
+        <div class="container">
+            <h1>El Teu Gimnàs <span class="accent">Personalitzat</span></h1>
+            <p class="subtitle">Explora el catàleg i crea la teva rutina ideal.</p>
+            
+            <nav class="main-nav">
+                <button class="nav-tab active" data-view="catalog">Explorar</button>
+                <button class="nav-tab" data-view="routines">Les Meves Rutines</button>
+                <button class="nav-tab" data-view="profile">El Meu Perfil</button>
+            </nav>
+            
+            <div class="filter-row" id="catalogFilters">
+                <nav class="filters" id="categorySelection">
+                    <button class="filter-btn active" data-category="tots">Tots</button>
+                    <button class="filter-btn" data-category="Cames">Cames</button>
+                    <button class="filter-btn" data-category="Empenta">Empenta</button>
+                    <button class="filter-btn" data-category="Tracció i Cardio">Tracció</button>
+                    <button class="filter-btn" data-category="Core">Core</button>
+                </nav>
+
+                <div class="material-filter-container">
+                    <button id="toggleMaterialMenu" class="filter-btn material-trigger">
+                        Filtrar per material <span class="arrow">▾</span>
+                    </button>
+                </div>
+            </div>
+
+            <div id="materialMenu" class="material-menu">
+                <div class="material-menu-content">
+                    <span class="menu-label">Material disponible:</span>
+                    <div class="toggle-group" id="materialToggles">
+                        <label class="toggle-control">
+                            <input type="checkbox" value="peses" checked>
+                            <span class="control-indicator"></span>
+                            Peses
+                        </label>
+                        <label class="toggle-control">
+                            <input type="checkbox" value="gomes" checked>
+                            <span class="control-indicator"></span>
+                            Gomes
+                        </label>
+                        <label class="toggle-control">
+                            <input type="checkbox" value="banqueta" checked>
+                            <span class="control-indicator"></span>
+                            Banqueta
+                        </label>
+                        <label class="toggle-control">
+                            <input type="checkbox" value="pes_corporal" checked>
+                            <span class="control-indicator"></span>
+                            Pes corporal
+                        </label>
+                        <label class="toggle-control">
+                            <input type="checkbox" value="rem" checked>
+                            <span class="control-indicator"></span>
+                            Rem
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Barra d'Accions de Selecció (Mode Creació Rutina) -->
+        <div id="selectionActionBar" class="selection-bar hidden">
+            <div class="container bar-content">
+                <span id="selectionCount">0 exercicis seleccionats</span>
+                <div class="bar-btns">
+                    <button id="cancelSelection" class="btn-text">Cancel·lar</button>
+                    <button id="saveRoutine" class="btn-primary-small">Guardar Rutina</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Secció de Catàleg -->
+        <section id="catalogSection" class="view-section">
+            <div class="container">
+                <div id="exerciseGrid" class="exercise-grid">
+                    <!-- Els exercicis es carregaran dinàmicament aquí -->
+                    <div class="loading">Carregant catàleg...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Secció de Rutines -->
+        <section id="routinesSection" class="view-section hidden">
+            <div class="container">
+                <div class="routines-header">
+                    <h2>Les Meves Rutines</h2>
+                    <button id="btnNewRoutine" class="fab-btn" title="Nova Rutina">+</button>
+                </div>
+                <div id="routinesList" class="routines-grid">
+                    <div class="empty-state">No tens cap rutina encara.</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="profileSection" class="view-section hidden">
+            <div class="container">
+                <div class="profile-card page-card">
+                    <h2>El Meu Perfil</h2>
+                    <p class="subtitle">Personalitza la teva experiència perquè els exercicis s'adaptin a tu.</p>
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label>Edat</label>
+                            <input type="number" id="pAge" value="30" min="10" max="100">
+                        </div>
+                        <div class="form-group">
+                            <label>Sexe Biològic</label>
+                            <select id="pSex">
+                                <option value="home">Home</option>
+                                <option value="dona">Dona</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Nivell de Condició Física</label>
+                            <select id="pLevel">
+                                <option value="beginner">Principiant</option>
+                                <option value="intermediate" selected>Intermedi</option>
+                                <option value="advanced">Avançat</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Pes Màxim Mancuernes (kg)</label>
+                            <input type="number" id="pMaxWeight" value="10" min="1" max="100">
+                        </div>
+                        <button type="submit" class="save-btn" style="width: 100%; margin-top: 2rem;">Guardar Perfil</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal de Guardar Rutina -->
+    <div id="saveRoutineModal" class="modal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <div class="profile-card">
+                <h2>Guardar Rutina</h2>
+                <div class="form-group">
+                    <label for="routineNameInput">Nom de la Rutina</label>
+                    <input type="text" id="routineNameInput" placeholder="Ex: Rutina de Matí">
+                </div>
+                <button id="confirmSaveRoutine" class="save-btn">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="executionModal" class="modal">
+        <div class="modal-content execution-card">
+            <span class="close-modal">&times;</span>
+            <div id="executionContent">
+                <!-- Contingut generat per JS -->
+            </div>
+        </div>
+    </div>
+
+    <footer class="main-footer">
+        <div class="container">
+            <p>&copy; 2026 <a href="https://www.calaixagil.com" target="_blank" style="color: inherit; text-decoration: none;">calaix[À]gil.com</a></p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="exercicis.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

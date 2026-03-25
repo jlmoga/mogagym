@@ -1,0 +1,907 @@
+/* 
+ * DISSENY PREMIUM PER A LA WEB-APP DE GIMNÀSTICA
+ * Creat per Antigravity
+ */
+
+:root {
+    /* Material 3 Dark Scheme (MoGa Custom) */
+    --primary: #ABC7FF;
+    --on-primary: #0D2F5F;
+    --primary-container: #294677;
+    --on-primary-container: #D7E2FF;
+    
+    --secondary: #BEC6DC;
+    --tertiary: #DDBCE0;
+    
+    --error: #FFB4AB;
+    
+    --bg-dark: #111318; /* surface */
+    --bg-card: rgba(68, 71, 78, 0.4); /* surface-variant at 40% */
+    --bg-card-hover: rgba(68, 71, 78, 0.7);
+    
+    --accent-gradient: linear-gradient(135deg, #ABC7FF 0%, #DDBCE0 100%);
+    --accent-color: #ABC7FF;
+    
+    --text-primary: #E2E2E9; /* on-surface */
+    --text-secondary: #C4C6D0; /* on-surface-variant */
+    
+    --border-color: rgba(142, 144, 153, 0.2); /* outline at 20% */
+    --shadow-premium: 0 12px 32px rgba(0, 0, 0, 0.6);
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --selection-color: #ABC7FF;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-dark);
+    color: var(--text-primary);
+    line-height: 1.6;
+    overflow-x: hidden;
+}
+
+.hidden {
+    display: none !important;
+}
+
+h1, h2, h3 {
+    font-family: 'Outfit', sans-serif;
+    letter-spacing: -0.02em;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 2rem;
+}
+
+/* Header */
+.main-header {
+    padding: 2rem 0 1.5rem;
+    text-align: center;
+    background: radial-gradient(circle at top, rgba(0, 242, 254, 0.05) 0%, transparent 70%);
+}
+
+.main-header h1 {
+    font-size: 3.5rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+}
+
+.accent {
+    background: var(--accent-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(171, 199, 255, 0.3);
+}
+
+.subtitle {
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    margin-bottom: 2rem;
+    font-weight: 300;
+}
+
+/* Navigació Principal */
+.main-nav {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.nav-tab {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1rem;
+    font-weight: 600;
+    padding: 0.5rem 0;
+    cursor: pointer;
+    position: relative;
+    transition: var(--transition-smooth);
+}
+
+.nav-tab.active {
+    color: var(--primary);
+}
+
+.nav-tab.active::after {
+    content: "";
+    position: absolute;
+    bottom: -0.6rem;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--accent-gradient);
+    border-radius: 3px;
+}
+
+/* Filtres */
+.filter-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+
+.filters {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.7rem 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.85rem;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.material-trigger .arrow {
+    transition: transform 0.3s ease;
+}
+
+.material-trigger.active .arrow {
+    transform: rotate(180deg);
+}
+
+.material-menu {
+    max-height: 0;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 20px;
+    margin: 0 auto;
+    width: fit-content;
+    border: 1px solid transparent;
+}
+
+.material-menu.open {
+    max-height: 500px;
+    margin-bottom: 3rem;
+    padding: 1.5rem 2rem;
+    border-color: var(--border-color);
+    box-shadow: var(--shadow-premium);
+}
+
+.material-menu-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+}
+
+.menu-label {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+
+.toggle-group {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+/* Custom Toggle Control */
+.toggle-control {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--text-secondary);
+    transition: var(--transition-smooth);
+}
+
+.toggle-control:hover {
+    color: var(--text-primary);
+}
+
+.toggle-control input {
+    display: none;
+}
+
+.control-indicator {
+    width: 40px;
+    height: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    position: relative;
+    transition: var(--transition-smooth);
+    border: 1px solid var(--border-color);
+}
+
+.control-indicator::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    background: var(--text-secondary);
+    border-radius: 50%;
+    top: 2px;
+    left: 2px;
+    transition: var(--transition-smooth);
+}
+
+.toggle-control input:checked + .control-indicator {
+    background: var(--accent-gradient);
+    border-color: transparent;
+}
+
+.toggle-control input:checked + .control-indicator::after {
+    left: 22px;
+    background: var(--bg-dark);
+}
+
+.toggle-control input:checked ~ .toggle-label {
+    color: var(--text-primary);
+}
+
+.filter-btn:hover {
+    background: var(--bg-card-hover);
+    color: var(--text-primary);
+    transform: translateY(-2px);
+}
+
+.filter-btn.active {
+    background: var(--accent-gradient);
+    color: var(--on-primary);
+    border-color: transparent;
+    box-shadow: 0 5px 15px rgba(171, 199, 255, 0.3);
+}
+
+/* Grid d'Exercicis */
+.exercise-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+    padding-bottom: 5rem;
+}
+
+/* Card d'Exercici */
+.exercise-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 24px;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+    backdrop-filter: blur(12px);
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+.exercise-card:hover {
+    transform: translateY(-10px);
+    border-color: var(--accent-color);
+    box-shadow: var(--shadow-premium);
+}
+
+.card-img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+    background: #FFFFFF; /* Fons blanc per als pictogrames */
+    border-bottom: 1px solid var(--border-color);
+}
+
+.card-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.category-tag {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    color: var(--accent-color);
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.05em;
+}
+
+.exercise-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.rep-tag {
+    display: inline-block;
+    background: var(--primary-container);
+    color: var(--on-primary-container);
+    padding: 0.3rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.instructions {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: var(--transition-smooth);
+}
+
+.exercise-card:hover .instructions {
+    -webkit-line-clamp: 10;
+    line-clamp: 10;
+}
+
+.benefit-box {
+    margin-top: auto;
+    background: rgba(255, 255, 255, 0.02);
+    padding: 1rem;
+    border-radius: 12px;
+    border-left: 2px solid var(--accent-color);
+}
+
+.benefit-box strong {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--accent-color);
+    text-transform: uppercase;
+}
+
+.benefit-box p {
+    font-size: 0.85rem;
+    font-style: italic;
+    color: var(--text-secondary);
+}
+
+/* Footer */
+.main-footer {
+    padding: 3rem 0;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+}
+
+.main-footer p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Animació de càrrega */
+.loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 5rem;
+    font-size: 1.5rem;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .main-header h1 {
+        font-size: 2.5rem;
+    }
+    .container {
+        padding: 0 1.5rem;
+    }
+}
+
+/* --- MODALS & PERFIL --- */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.open {
+    display: flex;
+}
+
+.profile-card {
+    background: var(--bg-card);
+    padding: 2rem;
+    border-radius: 24px;
+    border: 1px solid var(--border-color);
+    backdrop-filter: blur(12px);
+    transition: var(--transition-smooth);
+}
+
+.profile-card:hover {
+    border-color: var(--accent-color);
+}
+
+.page-card {
+    max-width: 600px;
+    margin: 2rem auto;
+}
+
+.modal-content {
+    background: var(--bg-dark);
+    padding: 2.5rem;
+    border: 1px solid var(--border-color);
+    border-radius: 32px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: var(--shadow-premium);
+    animation: modalFadeIn 0.4s ease-out;
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.close-modal {
+    position: absolute;
+    right: 1.5rem;
+    top: 1rem;
+    font-size: 2rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.close-modal:hover {
+    color: var(--primary);
+}
+
+.profile-card h2, .execution-card h2 {
+    margin-bottom: 2rem;
+    color: var(--primary);
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.form-group input, .form-group select {
+    width: 100%;
+    background: #1A1C20; /* Darker background for better contrast */
+    border: 1px solid var(--border-color);
+    padding: 0.8rem 1rem;
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-size: 1rem;
+    outline: none;
+    transition: var(--transition-smooth);
+}
+
+.form-group select option {
+    background: #1A1C20;
+    color: var(--text-primary);
+}
+
+.form-group input:focus, .form-group select:focus {
+    border-color: var(--primary);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.save-btn, .close-btn-action {
+    width: 100%;
+    background: var(--accent-gradient);
+    color: var(--on-primary);
+    border: none;
+    padding: 1rem;
+    border-radius: 16px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: var(--transition-smooth);
+}
+
+.save-btn:hover, .close-btn-action:hover {
+    transform: scale(1.02);
+    box-shadow: 0 5px 15px rgba(171, 199, 255, 0.3);
+}
+
+.profile-btn {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+    margin-left: 1rem;
+}
+
+.profile-btn:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+/* Executa Botó Card */
+.btn-execute {
+    background: var(--accent-gradient);
+    color: var(--on-primary);
+    border: none;
+    padding: 0.8rem;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-top: 1rem;
+    transition: var(--transition-smooth);
+}
+
+.btn-execute:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(171, 199, 255, 0.3);
+}
+
+.goal-highlight {
+    background: rgba(171, 199, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: 20px;
+    border-left: 4px solid var(--primary);
+    margin: 1.5rem 0;
+}
+
+.goal-highlight h4 {
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.goal-val {
+    font-size: 1.25rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.modal-img-small {
+    width: 100%;
+    height: auto;
+    max-height: 250px;
+    object-fit: contain;
+    background: #FFFFFF; /* Fons blanc per als pictogrames */
+    border-radius: 20px;
+    margin-bottom: 1rem;
+    border: 1px solid var(--border-color);
+}
+
+.modal-desc {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+    margin-bottom: 1.5rem;
+}
+
+/* --- RUTINES I SELECCIÓ --- */
+
+/* Barra de Selecció */
+.selection-bar {
+    position: fixed;
+    bottom: 2rem;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #1e1e24;
+    backdrop-filter: blur(20px);
+    padding: 1rem 2rem;
+    border-radius: 100px;
+    border: 1px solid var(--primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+    width: auto;
+    min-width: 300px;
+}
+
+.selection-bar.hidden {
+    display: none;
+}
+
+.bar-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 2rem;
+}
+
+.btn-primary-small {
+    background: var(--accent-gradient);
+    color: var(--on-primary);
+    border: none;
+    padding: 0.6rem 1.5rem;
+    border-radius: 50px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.btn-text {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+}
+
+/* Rutines Section */
+.view-section {
+    padding-top: 1rem;
+    padding-bottom: 3rem;
+    transition: opacity 0.3s ease;
+}
+
+.view-section.hidden {
+    display: none !important;
+}
+
+.routines-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.routines-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.routine-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    padding: 1.5rem;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.routine-card:hover {
+    transform: scale(1.02);
+    border-color: var(--primary);
+    background: var(--bg-card-hover);
+}
+
+.routine-card h3 {
+    margin-bottom: 0.5rem;
+}
+
+.routine-card .count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+/* Mode Selecció en Cards */
+.exercise-card.selecting {
+    border-color: rgba(171, 199, 255, 0.4);
+}
+
+.exercise-card.selected {
+    background: rgba(171, 199, 255, 0.1);
+    border-color: var(--primary);
+}
+
+.exercise-card.selected::before {
+    content: "✓";
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: var(--primary);
+    color: var(--on-primary);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    z-index: 5;
+}
+
+/* Barra de Progrés en Modal */
+.progress-container {
+    width: 100%;
+    height: 6px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--accent-gradient);
+    width: 0%;
+    transition: width 0.4s ease;
+}
+
+.nav-btns-step {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+.btn-step {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.7rem 1.2rem;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+    flex: 1;
+}
+
+.btn-step:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 4rem;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.02);
+    border-radius: 20px;
+    border: 1px dashed var(--border-color);
+}
+
+/* FAB - Botó '+' */
+.fab-btn {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    width: 64px;
+    height: 64px;
+    border-radius: 20px;
+    background: var(--accent-gradient);
+    color: var(--on-primary);
+    border: none;
+    font-size: 2.2rem;
+    font-weight: 300;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 12px 32px rgba(171, 199, 255, 0.4);
+    cursor: pointer;
+    z-index: 100;
+    transition: var(--transition-smooth);
+}
+
+.fab-btn:hover {
+    transform: scale(1.15) rotate(90deg);
+    box-shadow: 0 16px 48px rgba(171, 199, 255, 0.6);
+}
+
+/* Icona Eliminar */
+/* Targetes de Rutina actualitzades */
+.routine-card {
+    display: flex;
+    flex-direction: column;
+    min-height: 200px;
+}
+
+.routine-exercises-list {
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    opacity: 0.8;
+    margin-top: 0.5rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex-grow: 1; /* Push actions to the bottom */
+}
+
+.routine-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+}
+
+.btn-play {
+    background: var(--accent-gradient);
+    color: var(--on-primary);
+    border: none;
+    border-radius: 12px;
+    padding: 0.6rem 2.2rem; /* Més ample */
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+    font-weight: 700;
+}
+
+.btn-play:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 20px rgba(171, 199, 255, 0.4);
+}
+
+.btn-icon-delete {
+    background: rgba(255, 82, 82, 0.1);
+    color: #ff5252;
+    border: 1px solid rgba(255, 82, 82, 0.2);
+    border-radius: 12px;
+    padding: 0.6rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition-smooth);
+}
+
+.btn-icon-delete:hover {
+    background: rgba(255, 82, 82, 0.2);
+    transform: scale(1.1);
+    color: #ff5252;
+}
+
+.routine-card .count {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    display: block;
+}
+
+/* Footer */
+.main-footer {
+    padding: 3rem 0;
+    text-align: center;
+    border-top: 1px solid var(--border-color);
+    margin-top: 2rem;
+    clear: both;
+}
+
+.main-footer p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.main-footer p:hover {
+    color: var(--primary);
+}
