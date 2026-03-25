@@ -290,7 +290,7 @@ document.addEventListener('DOMContentLoaded', () => {
         isSelectionMode = active;
         selectedExercisesIds = [];
         selectionBar.classList.toggle('hidden', !active);
-        catalogFilters.classList.toggle('hidden', active);
+        // Ja no amaguem els filtres: catalogFilters.classList.toggle('hidden', active);
         updateDisplay();
     }
 
