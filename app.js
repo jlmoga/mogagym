@@ -12,7 +12,45 @@ function generarNomFitxer(nom) {
         .replace(/^-+|-+$/g, '');        // Netejar guionets al principi i al final
 }
 
+// Funció per normalitzar el nom de l'exercici per al fitxer d'imatge
+function generarNomFitxer(nom) {
+    return nom.toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "") // Eliminar accents
+        .replace(/[^a-z0-9]+/g, '-')     // Substituir caràcters no alfanumèrics (espais, parèntesis) per guionets
+        .replace(/^-+|-+$/g, '');        // Netejar guionets al principi i al final
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    // --- GESTIÓ DE NAVEGACIÓ (HISTORY API) ---
+    function navegarA(view, push = true) {
+        // Actualitzar classes de les pestanyes
+        navTabs.forEach(t => {
+            if (t.getAttribute('data-view') === view) {
+                t.classList.add('active');
+            } else {
+                t.classList.remove('active');
+            }
+        });
+
+        // Mostrar/amagar seccions
+        catalogSection.classList.toggle('hidden', view !== 'catalog');
+        routinesSection.classList.toggle('hidden', view !== 'routines');
+        profileSection.classList.toggle('hidden', view !== 'profile');
+        catalogFilters.classList.toggle('hidden', view !== 'catalog');
+
+        // Executar renderitzats segons la vista
+        if (view === 'catalog') {
+            renderExercises(CATALEG_EXERCICIS);
+        } else if (view === 'routines') {
+            renderRoutines();
+        }
+
+        // Guardar a l'historial
+        if (push) {
+            history.pushState({ view: view }, '', `#${view}`);
+        }
+    }
     // --- ELEMENTS DOM ---
     const exerciseGrid = document.getElementById('exerciseGrid');
     const categoryButtons = document.querySelectorAll('.filter-btn[data-category]');
@@ -156,6 +194,8 @@ document.addEventListener('DOMContentLoaded', () => {
             ${routineControls}
         `;
         executionModal.classList.add('open');
+        // Afegir estat a l'historial perquè el botó "Back" tanqui el modal
+        history.pushState({ modal: 'execution' }, '', '#modal');
 
         // Handlers de la rutina
         if (isRoutine) {
@@ -174,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             // Tornar a posar el listener al botó "Entès" dinàmic si no és rutina
             content.querySelector('.close-btn-action').addEventListener('click', () => {
-                executionModal.classList.remove('open');
+                history.back(); // En lloc de directament tancar, forcem un "back"
             });
         }
     }
@@ -369,21 +409,30 @@ document.addEventListener('DOMContentLoaded', () => {
     // Canvi de Pestanyes (Navegació)
     navTabs.forEach(tab => {
         tab.addEventListener('click', () => {
-            navTabs.forEach(t => t.classList.remove('active'));
-            tab.classList.add('active');
-            
-            currentView = tab.getAttribute('data-view');
-            catalogSection.classList.toggle('hidden', currentView !== 'catalog');
-            routinesSection.classList.toggle('hidden', currentView !== 'routines');
-            profileSection.classList.toggle('hidden', currentView !== 'profile');
-            catalogFilters.classList.toggle('hidden', currentView !== 'catalog');
-
-            if (currentView === 'catalog') {
-                renderExercises(CATALEG_EXERCICIS);
-            } else if (currentView === 'routines') {
-                renderRoutines();
-            }
+            const view = tab.getAttribute('data-view');
+            navegarA(view);
         });
+    });
+
+    // Gestió del botó "Back" (History API)
+    window.addEventListener('popstate', (event) => {
+        // 1. Si hi ha modals oberts, els tanquem
+        if (executionModal.classList.contains('open')) {
+            executionModal.classList.remove('open');
+            return;
+        }
+        if (saveRoutineModal.classList.contains('open')) {
+            saveRoutineModal.classList.remove('open');
+            return;
+        }
+
+        // 2. Gestionar el canvi de vista
+        const currentHash = window.location.hash.replace('#', '') || 'catalog';
+        const viewToLoad = (event.state && event.state.view) ? event.state.view : currentHash;
+        
+        // Evitar bucles infinits: només navegarA si la vista és diferent de l'actual
+        // o si forcem la càrrega des de l'estat
+        navegarA(viewToLoad, false);
     });
 
     btnNewRoutine.addEventListener('click', () => {
@@ -403,6 +452,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         routineNameInput.value = "";
         saveRoutineModal.classList.add('open');
+        history.pushState({ modal: 'saveRoutine' }, '', '#save');
         setTimeout(() => routineNameInput.focus(), 100);
     });
 
@@ -427,6 +477,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Inicialització
     try {
         loadProfile();
+        // Definir l'estat inicial a l'historial
+        history.replaceState({ view: 'catalog' }, '', '#catalog');
         updateDisplay();
     } catch (err) {
         console.error("Error durant la inicialització:", err);
