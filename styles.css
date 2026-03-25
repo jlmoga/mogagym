@@ -787,6 +787,12 @@ h1, h2, h3 {
 
 /* --- RUTINES I SELECCIÓ --- */
 
+/* Ocultar botons d'execució en mode selecció */
+.exercise-card.selecting .btn-execute,
+.exercise-card.selecting .btn-quick-play {
+    display: none !important;
+}
+
 /* Barra de Selecció */
 .selection-bar {
     position: fixed;

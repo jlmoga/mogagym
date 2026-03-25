@@ -114,6 +114,22 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         const m = multipliers[profile.level];
 
+        // --- CAS ESPECIAL: COMPTATGE (REM, ETC.) ---
+        if (exercise.tipus === 'comptatge') {
+            const comptatgeOpcions = {
+                'beginner': 100,
+                'intermediate': 300,
+                'advanced': 500
+            };
+            return {
+                sets: 1,
+                reps: comptatgeOpcions[profile.level] || 250,
+                extra: " remades",
+                isCount: true
+            };
+        }
+
+        // --- CAS ESTÀNDARD: SÈRIES X REPS ---
         // Parsejar repeticions suggerides (Ex: "3 sèries de 12-15 repeticions")
         const setsMatch = exercise.repeticions_suggerides.match(/(\d+)\s+sèries/);
         const repsMatch = exercise.repeticions_suggerides.match(/(\d+)-?(\d+)?\s+repeticions/);
@@ -134,15 +150,11 @@ document.addEventListener('DOMContentLoaded', () => {
             finalWeight = ` amb goma ${intensity}`;
         }
 
-        const viewTitles = {
-            'catalog': 'Explorar',
-            'routines': 'Les meves rutines',
-            'profile': 'El meu perfil'
-        };
         return {
             sets: finalSets,
             reps: finalReps,
-            extra: finalWeight
+            extra: finalWeight,
+            isCount: false
         };
     }
 
@@ -225,6 +237,8 @@ document.addEventListener('DOMContentLoaded', () => {
             routineControls = `<button class="close-btn-action">Tancar</button>`;
         }
 
+        const goalText = goal.isCount ? `${goal.reps}${goal.extra}` : `${goal.sets} sèries x ${goal.reps} repeticions${goal.extra}`;
+
         content.innerHTML = `
             <h2>${ex.nom}</h2>
             <div class="execution-header-compact">
@@ -232,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
                      onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
                 <div class="goal-highlight">
                     <h4>El teu objectiu per avui:</h4>
-                    <div class="goal-val">${goal.sets} sèries x ${goal.reps} repeticions${goal.extra}</div>
+                    <div class="goal-val">${goalText}</div>
                 </div>
             </div>
             <p class="modal-desc">${ex.instruccions}</p>
@@ -466,7 +480,6 @@ document.addEventListener('DOMContentLoaded', () => {
             maxWeight: parseInt(document.getElementById('pMaxWeight').value)
         };
         saveProfile(newData);
-        alert("Perfil actualitzat correctament! 🎉");
         updateDisplay();
         navTabs[0].click(); // Anar a explorar automàticament
     });

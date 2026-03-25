@@ -191,10 +191,12 @@ const CATALEG_EXERCICIS = [
     // --- TRACCIÓ I CARDIO ---
     {
         id: "traccio-01",
-        nom: "Màquina de rem (250 remades)",
+        nom: "Màquina de rem",
         categoria: "Tracció i cardio",
         equipament: "Màquina de rem",
         materials: ["rem"],
+        tipus: "comptatge",
+        opcions_comptatge: [100, 200, 300, 500],
         repeticions_suggerides: "Objectiu: 250 remades a ritme constant",
         instruccions: "Empeny fort amb les cames primer, inclina el tors lleugerament enrere i acaba estirant el manillar cap al teu abdomen. Torna els braços, inclina el tors endavant i flexiona genolls per repetir.",
         benefici_salut: "Treball cardiovascular d'alt impacte metabòlic que implica el 85% dels músculs del cos, millorant la capacitat aeròbica i la resistència muscular."
