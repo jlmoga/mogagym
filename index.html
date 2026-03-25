@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gimnàs Personalitzat | Catàleg d'Exercicis</title>
+    <title>mogaGym | El teu gimnàs a casa</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -26,13 +26,13 @@
     </script>
     <header class="main-header">
         <div class="container">
-            <h1>El Teu Gimnàs <span class="accent">Personalitzat</span></h1>
+            <h1>mogaGym. <span class="accent">El teu gimnàs a casa</span></h1>
             <p class="subtitle">Explora el catàleg i crea la teva rutina ideal.</p>
             
             <nav class="main-nav">
                 <button class="nav-tab active" data-view="catalog">Explorar</button>
-                <button class="nav-tab" data-view="routines">Les Meves Rutines</button>
-                <button class="nav-tab" data-view="profile">El Meu Perfil</button>
+                <button class="nav-tab" data-view="routines">Les meves rutines</button>
+                <button class="nav-tab" data-view="profile">El meu perfil</button>
             </nav>
             
             <div class="filter-row" id="catalogFilters">
@@ -40,7 +40,7 @@
                     <button class="filter-btn active" data-category="tots">Tots</button>
                     <button class="filter-btn" data-category="Cames">Cames</button>
                     <button class="filter-btn" data-category="Empenta">Empenta</button>
-                    <button class="filter-btn" data-category="Tracció i Cardio">Tracció</button>
+                    <button class="filter-btn" data-category="Tracció i cardio">Tracció</button>
                     <button class="filter-btn" data-category="Core">Core</button>
                 </nav>
 
@@ -80,6 +80,11 @@
                             <span class="control-indicator"></span>
                             Rem
                         </label>
+                        <label class="toggle-control">
+                            <input type="checkbox" value="pilota" checked>
+                            <span class="control-indicator"></span>
+                            Pilota
+                        </label>
                     </div>
                 </div>
             </div>
@@ -91,7 +96,7 @@
                 <span id="selectionCount">0 exercicis seleccionats</span>
                 <div class="bar-btns">
                     <button id="cancelSelection" class="btn-danger-small">Cancel·lar</button>
-                    <button id="saveRoutine" class="btn-primary-small">Guardar Rutina</button>
+                    <button id="saveRoutine" class="btn-primary-small">Guardar rutina</button>
                 </div>
             </div>
         </div>
@@ -112,8 +117,8 @@
         <section id="routinesSection" class="view-section hidden">
             <div class="container">
                 <div class="routines-header">
-                    <h2>Les Meves Rutines</h2>
-                    <button id="btnNewRoutine" class="fab-btn" title="Nova Rutina">+</button>
+                    <h2>Les meves rutines</h2>
+                    <button id="btnNewRoutine" class="fab-btn" title="Nova rutina">+</button>
                 </div>
                 <div id="routinesList" class="routines-grid">
                     <div class="empty-state">No tens cap rutina encara.</div>
@@ -124,7 +129,7 @@
         <section id="profileSection" class="view-section hidden">
             <div class="container">
                 <div class="profile-card page-card">
-                    <h2>El Meu Perfil</h2>
+                    <h2>El meu perfil</h2>
                     <p class="subtitle">Personalitza la teva experiència perquè els exercicis s'adaptin a tu.</p>
                     <form id="profileForm">
                         <div class="form-group">
@@ -139,7 +144,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Nivell de Condició Física</label>
+                            <label>Nivell de condició física</label>
                             <select id="pLevel">
                                 <option value="beginner">Principiant</option>
                                 <option value="intermediate" selected>Intermedi</option>
@@ -147,10 +152,10 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>Pes Màxim Mancuernes (kg)</label>
+                            <label>Pes màxim mancuernes (kg)</label>
                             <input type="number" id="pMaxWeight" value="10" min="1" max="100">
                         </div>
-                        <button type="submit" class="save-btn" style="width: 100%; margin-top: 2rem;">Guardar Perfil</button>
+                        <button type="submit" class="save-btn" style="width: 100%; margin-top: 2rem;">Guardar perfil</button>
                     </form>
                 </div>
             </div>
@@ -164,10 +169,20 @@
             <div class="profile-card">
                 <h2>Guardar Rutina</h2>
                 <div class="form-group">
-                    <label for="routineNameInput">Nom de la Rutina</label>
-                    <input type="text" id="routineNameInput" placeholder="Ex: Rutina de Matí">
+                    <label for="routineNameInput">Nom de la rutina</label>
+                    <input type="text" id="routineNameInput" placeholder="Ex: Rutina de matí">
                 </div>
                 <button id="confirmSaveRoutine" class="save-btn">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Detall de l'Exercici -->
+    <div id="detailModal" class="modal">
+        <div class="modal-content detail-card">
+            <span class="close-modal">&times;</span>
+            <div id="detailContent">
+                <!-- Contingut generat per JS -->
             </div>
         </div>
     </div>

@@ -19,7 +19,7 @@ const CATALEG_EXERCICIS = [
         id: "cames-02",
         nom: "Estocada búlgara (peu a banqueta)",
         categoria: "Cames",
-        equipament: "Banqueta, Peses (opcional)",
+        equipament: "Banqueta, peses (opcional)",
         materials: ["banqueta", "peses"],
         repeticions_suggerides: "3 sèries de 10 repeticions per cama",
         instruccions: "Col·loca un peu darrere teu sobre la banqueta. Amb l'altra cama endavant, baixa el genoll posterior cap a terra mantenint el tors vertical. El genoll davanter ha de quedar alineat amb el turmell. Puja controladament.",
@@ -29,7 +29,7 @@ const CATALEG_EXERCICIS = [
         id: "cames-03",
         nom: "Step-up (pujar a banqueta)",
         categoria: "Cames",
-        equipament: "Banqueta, Peses (opcional)",
+        equipament: "Banqueta, peses (opcional)",
         materials: ["banqueta", "peses"],
         repeticions_suggerides: "3 sèries de 12 repeticions per cama",
         instruccions: "Col·loca un sencer sobre la banqueta. Empeny amb aquesta cama per elevar tot el cos fins a quedar dret sobre la banqueta. Baixa lentament per tornar a terra sense deixar caure el pes bruscament.",
@@ -91,7 +91,7 @@ const CATALEG_EXERCICIS = [
         nom: "Isquios amb pilota",
         categoria: "Cames",
         equipament: "Pilota suïssa (Fitball)",
-        materials: ["altres"],
+        materials: ["pilota"],
         repeticions_suggerides: "3 sèries de 12 repeticions",
         instruccions: "Estirat d'esquena amb els talons sobre la pilota. Eleva el maluc i estira la pilota cap a tu flexionant els genolls, després torna a estirar les cames sense baixar el maluc.",
         benefici_salut: "Treball d'estabilitat i enfortiment de la cadena posterior molt intens."
@@ -192,7 +192,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-01",
         nom: "Màquina de rem (250 remades)",
-        categoria: "Tracció i Cardio",
+        categoria: "Tracció i cardio",
         equipament: "Màquina de rem",
         materials: ["rem"],
         repeticions_suggerides: "Objectiu: 250 remades a ritme constant",
@@ -202,7 +202,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-02",
         nom: "Rem a una mà (recolzat a banqueta)",
-        categoria: "Tracció i Cardio",
+        categoria: "Tracció i cardio",
         equipament: "Banqueta, Peses",
         materials: ["banqueta", "peses"],
         repeticions_suggerides: "3 sèries de 12 repeticions per costat",
@@ -212,7 +212,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-03",
         nom: "Rem amb gomes (punt fix)",
-        categoria: "Tracció i Cardio",
+        categoria: "Tracció i cardio",
         equipament: "Goma elàstica, Punt fix",
         materials: ["gomes"],
         repeticions_suggerides: "3 sèries de 15-20 repeticions",
@@ -222,7 +222,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-04",
         nom: "Curl de bíceps dempeus",
-        categoria: "Tracció i Cardio",
+        categoria: "Tracció i cardio",
         equipament: "Peses o Goma",
         materials: ["peses", "gomes"],
         repeticions_suggerides: "3 sèries de 12 repeticions",
@@ -232,7 +232,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-05",
         nom: "Curl de bíceps concentrat",
-        categoria: "Tracció i Cardio",
+        categoria: "Tracció i cardio",
         equipament: "Banqueta, Peses",
         materials: ["banqueta", "peses"],
         repeticions_suggerides: "3 sèries de 12 repeticions per braç",
@@ -242,7 +242,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-06",
         nom: "Face-pull amb gomes",
-        categoria: "Tracció i Cardio",
+        categoria: "Tracció i cardio",
         equipament: "Goma elàstica, Punt fix",
         materials: ["gomes"],
         repeticions_suggerides: "3 sèries de 15 repeticions",
@@ -252,7 +252,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-07",
         nom: "Rem vertical amb peses",
-        categoria: "Tracció i Cardio",
+        categoria: "Tracció i cardio",
         equipament: "Peses",
         materials: ["peses"],
         repeticions_suggerides: "3 sèries de 12 repeticions",

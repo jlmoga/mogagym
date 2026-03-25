@@ -12,15 +12,6 @@ function generarNomFitxer(nom) {
         .replace(/^-+|-+$/g, '');        // Netejar guionets al principi i al final
 }
 
-// Funció per normalitzar el nom de l'exercici per al fitxer d'imatge
-function generarNomFitxer(nom) {
-    return nom.toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "") // Eliminar accents
-        .replace(/[^a-z0-9]+/g, '-')     // Substituir caràcters no alfanumèrics (espais, parèntesis) per guionets
-        .replace(/^-+|-+$/g, '');        // Netejar guionets al principi i al final
-}
-
 document.addEventListener('DOMContentLoaded', () => {
     // --- GESTIÓ DE NAVEGACIÓ (HISTORY API) ---
     function navegarA(view, push = true) {
@@ -82,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnConfirmSaveRoutine = document.getElementById('confirmSaveRoutine');
 
     let currentCategory = 'tots';
-    let currentView = 'catalog';
     let isSelectionMode = false;
     let selectedExercisesIds = [];
     let routines = JSON.parse(localStorage.getItem('mogagym_routines')) || [];
@@ -104,7 +94,9 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('pSex').value = profile.sex;
             document.getElementById('pLevel').value = profile.level;
             document.getElementById('pMaxWeight').value = profile.maxWeight;
+            return true;
         }
+        return false;
     }
 
     function saveProfile(newData) {
@@ -142,6 +134,11 @@ document.addEventListener('DOMContentLoaded', () => {
             finalWeight = ` amb goma ${intensity}`;
         }
 
+        const viewTitles = {
+            'catalog': 'Explorar',
+            'routines': 'Les meves rutines',
+            'profile': 'El meu perfil'
+        };
         return {
             sets: finalSets,
             reps: finalReps,
@@ -149,7 +146,57 @@ document.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    function showExecutionModal(exId, isRoutine = false) {
+    function showExerciseDetail(exId) {
+        const ex = CATALEG_EXERCICIS.find(e => e.id === exId);
+        const detailModal = document.getElementById('detailModal');
+        const detailContent = document.getElementById('detailContent');
+        
+        detailContent.innerHTML = `
+            <h2>${ex.nom}</h2>
+            <img src="img/${generarNomFitxer(ex.nom)}.jpg" class="modal-img-small" alt="${ex.nom}" 
+                 onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
+            
+            <div class="detail-tabs">
+                <button class="tab-btn active" onclick="switchDetailTab('instruccions')">Instruccions</button>
+                <button class="tab-btn" onclick="switchDetailTab('beneficis')">Beneficis</button>
+            </div>
+
+            <div id="pane-instruccions" class="tab-pane active">
+                <p class="modal-desc">${ex.instruccions}</p>
+            </div>
+            
+            <div id="pane-beneficis" class="tab-pane">
+                <div class="benefit-box" style="margin-top: 0;">
+                    <strong>Benefici principal:</strong>
+                    <p>${ex.benefici_salut}</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                <button class="save-btn" style="margin-top: 0; width: 100%;" onclick="window.openExecutionModal('${ex.id}'); document.getElementById('detailModal').classList.remove('open');">
+                    Començar entrenament
+                </button>
+            </div>
+        `;
+        
+        detailModal.classList.add('open');
+        history.pushState({ modal: 'detail' }, '', '#detail');
+    }
+
+    window.switchDetailTab = (tabName) => {
+        const panes = document.querySelectorAll('.tab-pane');
+        const buttons = document.querySelectorAll('.tab-btn');
+        
+        panes.forEach(p => p.classList.remove('active'));
+        buttons.forEach(b => b.classList.remove('active'));
+        
+        document.getElementById(`pane-${tabName}`).classList.add('active');
+        // Trobar el botó corresponent i activar-lo
+        const index = tabName === 'instruccions' ? 0 : 1;
+        buttons[index].classList.add('active');
+    };
+
+    function openExecutionModal(exId, isRoutine = false) {
         const ex = CATALEG_EXERCICIS.find(e => e.id === exId);
         if (!ex) return;
 
@@ -179,13 +226,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         content.innerHTML = `
-            <h2>${isRoutine ? 'Entrenament en Ruta' : 'Execució Ràpida'}</h2>
-            <img src="img/${nomImatge}.jpg" alt="${ex.nom}" class="modal-img-small" 
-                 onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
-            <p>Adaptat per a nivell <strong>${document.getElementById('pLevel').options[document.getElementById('pLevel').selectedIndex].text}</strong>:</p>
-            <div class="goal-highlight">
-                <h4>${ex.nom}</h4>
-                <div class="goal-val">${goal.sets} sèries x ${goal.reps} repeticions${goal.extra}</div>
+            <h2>${ex.nom}</h2>
+            <div class="execution-header-compact">
+                <img src="img/${generarNomFitxer(ex.nom)}.jpg" class="modal-img" alt="${ex.nom}" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
+                <div class="goal-highlight">
+                    <h4>El teu objectiu per avui:</h4>
+                    <div class="goal-val">${goal.sets} sèries x ${goal.reps} repeticions${goal.extra}</div>
+                </div>
             </div>
             <p class="modal-desc">${ex.instruccions}</p>
             <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
@@ -201,12 +249,12 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isRoutine) {
             document.getElementById('prevStep')?.addEventListener('click', () => {
                 currentRoutineExecution.currentIndex--;
-                showExecutionModal(currentRoutineExecution.items[currentRoutineExecution.currentIndex], true);
+                openExecutionModal(currentRoutineExecution.items[currentRoutineExecution.currentIndex], true);
             });
             document.getElementById('nextStep')?.addEventListener('click', () => {
                 if (currentRoutineExecution.currentIndex < currentRoutineExecution.items.length - 1) {
                     currentRoutineExecution.currentIndex++;
-                    showExecutionModal(currentRoutineExecution.items[currentRoutineExecution.currentIndex], true);
+                    openExecutionModal(currentRoutineExecution.items[currentRoutineExecution.currentIndex], true);
                 } else {
                     finishRoutine();
                 }
@@ -218,6 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
     }
+    window.openExecutionModal = openExecutionModal; // Make globally accessible for onclick
 
     function finishRoutine() {
         executionModal.classList.remove('open');
@@ -274,7 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
             currentIndex: 0,
             items: routine.exercises
         };
-        showExecutionModal(routine.exercises[0], true);
+        openExecutionModal(routine.exercises[0], true);
     };
 
     window.deleteRoutine = (index) => {
@@ -292,6 +341,10 @@ document.addEventListener('DOMContentLoaded', () => {
         selectionBar.classList.toggle('hidden', !active);
         // Ja no amaguem els filtres: catalogFilters.classList.toggle('hidden', active);
         updateDisplay();
+    }
+
+    function updateSelectionCounter() {
+        selectionCount.innerText = `${selectedExercisesIds.length} exercicis seleccionats`;
     }
 
     // --- GESTIÓ DEL CATÀLEG ---
@@ -333,22 +386,36 @@ document.addEventListener('DOMContentLoaded', () => {
                         <strong>Benefici Salut:</strong>
                         <p>${ex.benefici_salut}</p>
                     </div>
+                    <button class="btn-quick-play" title="Executar ràpidament">▶</button>
                 </div>
             `;
             
-            card.addEventListener('click', () => {
+            card.addEventListener('click', (e) => {
+                // Si ha clicat el botó de play, no obrim el detall (ja ho gestiona el botó)
+                if (e.target.closest('.btn-quick-play')) return;
+                
                 if (isSelectionMode) {
-                    if (selectedExercisesIds.includes(ex.id)) {
-                        selectedExercisesIds = selectedExercisesIds.filter(id => id !== ex.id);
+                    card.classList.toggle('selected');
+                    const id = ex.id;
+                    if (card.classList.contains('selected')) {
+                        selectedExercisesIds.push(id);
                     } else {
-                        selectedExercisesIds.push(ex.id);
+                        selectedExercisesIds = selectedExercisesIds.filter(i => i !== id);
                     }
-                    selectionCount.innerText = `${selectedExercisesIds.length} exercicis seleccionats`;
-                    renderExercises(exercises); // Refresh cards to show selection
+                    updateSelectionCounter();
                 } else {
-                    showExecutionModal(ex.id);
+                    showExerciseDetail(ex.id);
                 }
             });
+
+            // Botó d'execució ràpida (Mobile)
+            const quickPlayBtn = card.querySelector('.btn-quick-play');
+            if (quickPlayBtn) {
+                quickPlayBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    openExecutionModal(ex.id);
+                });
+            }
             
             exerciseGrid.appendChild(card);
         });
@@ -364,9 +431,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!materialMenu.contains(e.target) && !materialTrigger.contains(e.target)) {
             materialMenu.classList.remove('open');
             materialTrigger.classList.remove('active');
-        }
-        if (e.target.classList.contains('modal')) {
-            e.target.classList.remove('open');
         }
     });
 
@@ -388,7 +452,8 @@ document.addEventListener('DOMContentLoaded', () => {
     
     closeModals.forEach(btn => {
         btn.addEventListener('click', () => {
-            executionModal.classList.remove('open');
+            // This will now trigger history.back()
+            history.back();
         });
     });
 
@@ -416,7 +481,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gestió del botó "Back" (History API)
     window.addEventListener('popstate', (event) => {
+        const detailModal = document.getElementById('detailModal');
+        const executionModal = document.getElementById('executionModal');
+        const saveRoutineModal = document.getElementById('saveRoutineModal');
+
         // 1. Si hi ha modals oberts, els tanquem
+        if (detailModal.classList.contains('open')) {
+            detailModal.classList.remove('open');
+            return;
+        }
         if (executionModal.classList.contains('open')) {
             executionModal.classList.remove('open');
             return;
@@ -476,9 +549,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Inicialització
     try {
-        loadProfile();
-        // Definir l'estat inicial a l'historial
-        history.replaceState({ view: 'catalog' }, '', '#catalog');
+        const hasProfile = loadProfile();
+        
+        // Si no hi ha perfil, anem directament a la pestanya de perfil
+        if (!hasProfile) {
+            navegarA('profile', false);
+            // Opcional: podríem mostrar un missatge de benvinguda
+        } else {
+            const initialView = window.location.hash.replace('#', '') || 'catalog';
+            navegarA(initialView, false);
+        }
+        
         updateDisplay();
     } catch (err) {
         console.error("Error durant la inicialització:", err);
