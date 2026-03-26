@@ -261,6 +261,16 @@ const CATALEG_EXERCICIS = [
         instruccions: "Dret, sostén les peses davant teu. Eleva-les verticalment cap a la barbeta, mantenint els colzes sempre per sobre de les mans i prop del cos.",
         benefici_salut: "Treballa els trapezis i el deltoides mitjà, millorant l'estètica i la força del cinturó escapular."
     },
+    {
+        id: "traccio-08",
+        nom: "Elevacions laterals",
+        categoria: "Tracció i cardio",
+        equipament: "Pes (mancuerna)",
+        materials: ["peses"],
+        repeticions_suggerides: "3 sèries de 12-15 repeticions per braç",
+        instruccions: "Sostén un pes en una mà amb el braç paral·lel al cos. Eleva el braç lateralment fins a arribar a un angle de 90 graus (a l'alçada de l'espatlla). Baixa lentament per tornar a la posició inicial. Completa la sèrie i repeteix amb l'altre braç.",
+        benefici_salut: "Aïllament eficaç del deltoide lateral, millorant l'amplada i l'estabilitat de l'espatlla."
+    },
 
     // --- CORE ---
     {

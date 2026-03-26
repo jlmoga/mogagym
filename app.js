@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Executar renderitzats segons la vista
         if (view === 'catalog') {
-            renderExercises(CATALEG_EXERCICIS);
+            updateDisplay();
         } else if (view === 'routines') {
             renderRoutines();
         }
@@ -88,7 +88,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentCategory = 'tots';
     let isSelectionMode = false;
     let selectedExercisesIds = [];
-    let routines = JSON.parse(localStorage.getItem('mogagym_routines')) || [];
+    
+    // --- MIGRACIÓ I PERSISTÈNCIA (LocalStorage) ---
+    // Migració de dades de mogagym a kora360 si cal
+    if (localStorage.getItem('mogagym_routines') && !localStorage.getItem('kora360_routines')) {
+        localStorage.setItem('kora360_routines', localStorage.getItem('mogagym_routines'));
+    }
+    
+    let routines = JSON.parse(localStorage.getItem('kora360_routines')) || [];
     let currentRoutineExecution = null;
     let profile = {
         age: 30,
@@ -239,15 +246,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="progress-container">
                     <div class="progress-bar" style="width: ${progress}%"></div>
                 </div>
-                <div class="random-toggle-container">
-                    <div class="random-toggle-label">
-                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.73 11.09l-1.41 1.41 3.13 3.13L14.5 22H20v-5.5l-2.04 2.04-2.73-2.73z"/></svg>
-                        <span>Mode Aleatori</span>
+                <div class="execution-options">
+                    <div class="random-toggle-container">
+                        <div class="random-toggle-label">
+                            <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.73 11.09l-1.41 1.41 3.13 3.13L14.5 22H20v-5.5l-2.04 2.04-2.73-2.73z"/></svg>
+                            <span>Mode Aleatori</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="randomModeToggle" ${currentRoutineExecution.isRandom ? 'checked' : ''}>
+                            <span class="slider"></span>
+                        </label>
                     </div>
-                    <label class="switch">
-                        <input type="checkbox" id="randomModeToggle" ${currentRoutineExecution.isRandom ? 'checked' : ''}>
-                        <span class="slider"></span>
-                    </label>
+                    <div class="random-toggle-container">
+                        <div class="random-toggle-label">
+                            <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M15 7v4h1V7h-1zm2 0v4h1V7h-1zm2 0v4h1V7h-1zM5 13h14v-2H5v2zm0 4h14v-2H5v2zM5 7v4h1V7H5zm2 0v4h1V7H7zm2 0v4h1V7H9zm2 0v4h1V7h-1z"/></svg>
+                            <span>Entrenament en circuit</span>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="circuitModeToggle" ${currentRoutineExecution.isCircuit ? 'checked' : ''}>
+                            <span class="slider"></span>
+                        </label>
+                    </div>
                 </div>
                 <div class="nav-btns-step">
                     <button class="btn-step" id="prevStep" ${currentIndex === 0 ? 'disabled' : ''}>← Anterior</button>
@@ -260,7 +279,9 @@ document.addEventListener('DOMContentLoaded', () => {
             routineControls = `<button class="close-btn-action">Tancar</button>`;
         }
 
-        const goalText = goal.isCount ? `${goal.reps}${goal.extra}` : `${goal.sets} sèries x ${goal.reps} repeticions${goal.extra}`;
+        const item = isRoutine ? currentRoutineExecution.items[currentRoutineExecution.currentIndex] : { id: exId, set: 1 };
+        const exItem = isRoutine ? CATALEG_EXERCICIS.find(e => e.id === item.id) : ex;
+        const goalText = goal.isCount ? `${goal.reps}${goal.extra}` : `SÈRIE ${item.set} de ${goal.sets} (${goal.reps} reps${goal.extra})`;
 
         content.innerHTML = `
             <h2>${ex.nom}</h2>
@@ -286,12 +307,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (isRoutine) {
             document.getElementById('prevStep')?.addEventListener('click', () => {
                 currentRoutineExecution.currentIndex--;
-                openExecutionModal(currentRoutineExecution.items[currentRoutineExecution.currentIndex], true);
+                const item = currentRoutineExecution.items[currentRoutineExecution.currentIndex];
+                openExecutionModal(item.id, true);
             });
             document.getElementById('nextStep')?.addEventListener('click', () => {
                 if (currentRoutineExecution.currentIndex < currentRoutineExecution.items.length - 1) {
                     currentRoutineExecution.currentIndex++;
-                    openExecutionModal(currentRoutineExecution.items[currentRoutineExecution.currentIndex], true);
+                    const item = currentRoutineExecution.items[currentRoutineExecution.currentIndex];
+                    openExecutionModal(item.id, true);
                 } else {
                     finishRoutine();
                 }
@@ -329,6 +352,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Refresquem el modal per actualitzar el comptador si hagués canviat res (tot i que no canvia)
                 // En realitat només ens cal per guardar l'estat.
             });
+            // Toggle de mode circuit
+            document.getElementById('circuitModeToggle')?.addEventListener('change', (e) => {
+                const isCircuit = e.target.checked;
+                currentRoutineExecution.isCircuit = isCircuit;
+                regenerateSequence();
+                openExecutionModal(currentRoutineExecution.items[currentRoutineExecution.currentIndex].id, true);
+            });
         } else {
             // Tornar a posar el listener al botó "Entès" dinàmic si no és rutina
             content.querySelector('.close-btn-action').addEventListener('click', () => {
@@ -348,7 +378,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- GESTIÓ DE RUTINES ---
     function saveRoutines() {
-        localStorage.setItem('mogagym_routines', JSON.stringify(routines));
+        localStorage.setItem('kora360_routines', JSON.stringify(routines));
     }
 
     function renderRoutines() {
@@ -362,7 +392,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const card = document.createElement('div');
             card.className = 'routine-card';
             
-            // Obtenir els noms dels exercicis per mostrar-los
             const exerciseNames = routine.exercises
                 .map(id => {
                     const ex = CATALEG_EXERCICIS.find(e => e.id === id);
@@ -376,18 +405,33 @@ document.addEventListener('DOMContentLoaded', () => {
                 <p class="count">${routine.exercises.length} exercicis</p>
                 <p class="routine-exercises-list">${exerciseNames}</p>
                 <div class="routine-actions">
-                    <button class="btn-play" title="Executar Rutina" onclick="event.stopPropagation(); window.startRoutine(${index})">
+                    <button class="btn-play" title="Executar Rutina">
                         <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
                     </button>
-                    <button class="btn-icon-edit" title="Editar Rutina" onclick="event.stopPropagation(); window.openEditRoutine(${index})">
+                    <button class="btn-icon-edit" title="Editar Rutina">
                         <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
                     </button>
-                    <button class="btn-icon-delete" title="Eliminar Rutina" onclick="event.stopPropagation(); window.deleteRoutine(${index})">
+                    <button class="btn-icon-delete" title="Eliminar Rutina">
                         <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                     </button>
                 </div>
             `;
-            card.onclick = () => window.startRoutine(index);
+            
+            // Add event listeners properly
+            card.querySelector('.btn-play').addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.startRoutine(index);
+            });
+            card.querySelector('.btn-icon-edit').addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.openEditRoutine(index);
+            });
+            card.querySelector('.btn-icon-delete').addEventListener('click', (e) => {
+                e.stopPropagation();
+                window.deleteRoutine(index);
+            });
+            
+            card.addEventListener('click', () => window.startRoutine(index));
             routinesList.appendChild(card);
         });
     }
@@ -396,16 +440,110 @@ document.addEventListener('DOMContentLoaded', () => {
         const routine = routines[index];
         currentRoutineExecution = {
             currentIndex: 0,
-            items: routine.exercises
+            isRandom: false,
+            isCircuit: false,
+            originalExercises: routine.exercises, // Guardem IDs originals
+            items: []
         };
-        openExecutionModal(routine.exercises[0], true);
+        regenerateSequence();
+        openExecutionModal(currentRoutineExecution.items[0].id, true);
     };
 
+    function regenerateSequence() {
+        const { isRandom, isCircuit, originalExercises, currentIndex } = currentRoutineExecution;
+        
+        // 1. Obtenir informació de cada exercici (incloent sets)
+        const exData = originalExercises.map(id => {
+            const ex = CATALEG_EXERCICIS.find(e => e.id === id);
+            return { id, goal: getExecutionGoal(ex) };
+        });
+
+        let newItems = [];
+        
+        if (isCircuit) {
+            // Mode Circuit: Interleavar sèries
+            const maxSets = Math.max(...exData.map(d => d.goal.sets));
+            for (let s = 1; s <= maxSets; s++) {
+                let lap = [];
+                exData.forEach(d => {
+                    if (s <= d.goal.sets) {
+                        // Excepció: comptatge només a la 1a volta
+                        if (d.goal.isCount && s > 1) return;
+                        lap.push({ id: d.id, set: s });
+                    }
+                });
+                
+                if (isRandom) {
+                    // Si és aleatori, shufflem la volta actual
+                    for (let i = lap.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [lap[i], lap[j]] = [lap[j], lap[i]];
+                    }
+                }
+                newItems.push(...lap);
+            }
+        } else {
+            // Mode Normal
+            exData.forEach(d => {
+                for (let s = 1; s <= d.goal.sets; s++) {
+                    newItems.push({ id: d.id, set: s });
+                }
+            });
+            
+            if (isRandom) {
+                // Si és aleatori normal, shufflem tot? 
+                // Segons el comportament anterior, shufflavem els EXERCICIS, no les sèries individuals barrejades.
+                // Per mantenir coherència, si és aleatori NO cercuit, shufflem per bloc d'exercici.
+                let exerciseBlocks = [];
+                exData.forEach(d => {
+                    let block = [];
+                    for (let s = 1; s <= d.goal.sets; s++) {
+                        block.push({ id: d.id, set: s });
+                    }
+                    exerciseBlocks.push(block);
+                });
+                
+                for (let i = exerciseBlocks.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [exerciseBlocks[i], exerciseBlocks[j]] = [exerciseBlocks[j], exerciseBlocks[i]];
+                }
+                newItems = exerciseBlocks.flat();
+            }
+        }
+
+        // Si ja estàvem executant, hem d'intentar mantenir el punt on estàvem?
+        // És difícil perquè l'estructura canvia totalment. 
+        // Per simplicitat, si es canvia de mode, es reinicia al principi de l'exercici actual?
+        // Millor: busquem l'item equivalent o reiniciem. 
+        // Per ara, si es canvia el mode a mig camí, mantenim el currentIndex si és vàlid, o resetejem.
+        currentRoutineExecution.items = newItems;
+        if (currentRoutineExecution.currentIndex >= newItems.length) {
+            currentRoutineExecution.currentIndex = 0;
+        }
+    }
+
+    // Variable global per mantenir la referència a la funció de refrescar el modal d'edició
+    let currentRenderEditList = null;
+
     window.deleteRoutine = (index) => {
-        if (confirm("Segur que vols eliminar aquesta rutina?")) {
-            routines.splice(index, 1);
-            saveRoutines();
-            renderRoutines();
+        routines.splice(index, 1);
+        saveRoutines();
+        renderRoutines();
+    };
+
+    window.removeExercise = (rIdx, eIdx) => {
+        const r = routines[rIdx];
+        if (r.exercises.length <= 1) {
+            // alert() is still a bit dangerous if blocked, but it's a safety guard.
+            // I'll leave it as a simple console alert or just return.
+            // Actually, I'll use a simple alert but let's hope it works now that listeners are fixed.
+            alert("La rutina ha de tenir almenys un exercici.");
+            return;
+        }
+        r.exercises.splice(eIdx, 1);
+        saveRoutines();
+        if (currentRenderEditList) {
+            currentRenderEditList();
         }
     };
 
@@ -416,24 +554,36 @@ document.addEventListener('DOMContentLoaded', () => {
         const editContent = document.getElementById('editRoutineContent');
         
         const renderEditList = () => {
-            let listHtml = '<ul class="edit-list">';
+            currentRenderEditList = renderEditList; // Guardem la referència
+            const editListUl = document.createElement('ul');
+            editListUl.className = 'edit-list';
+            
             routine.exercises.forEach((exId, exIndex) => {
                 const ex = CATALEG_EXERCICIS.find(e => e.id === exId);
                 const exName = ex ? ex.nom : "Exercici desconegut";
+                const exImg = ex ? `img/${generarNomFitxer(ex.nom)}.jpg` : 'https://placehold.co/100x100/111/4facfe?text=?';
                 
-                listHtml += `
-                    <li class="edit-item">
+                const li = document.createElement('li');
+                li.className = 'edit-item';
+                li.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
+                        <img src="${exImg}" class="edit-item-img" alt="${exName}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/111/4facfe?text=?'">
                         <span class="edit-item-name">${exName}</span>
-                        <div class="edit-controls">
-                            <button class="btn-edit-control" onclick="window.moveExercise(${index}, ${exIndex}, -1)" ${exIndex === 0 ? 'disabled' : ''} title="Moure amunt">↑</button>
-                            <button class="btn-edit-control" onclick="window.moveExercise(${index}, ${exIndex}, 1)" ${exIndex === routine.exercises.length - 1 ? 'disabled' : ''} title="Moure avall">↓</button>
-                            <button class="btn-edit-control delete" onclick="window.removeExercise(${index}, ${exIndex})" title="Eliminar">🗑️</button>
-                        </div>
-                    </li>
+                    </div>
+                    <div class="edit-controls">
+                        <button class="btn-edit-control move-up" ${exIndex === 0 ? 'disabled' : ''} title="Moure amunt">↑</button>
+                        <button class="btn-edit-control move-down" ${exIndex === routine.exercises.length - 1 ? 'disabled' : ''} title="Moure avall">↓</button>
+                        <button class="btn-edit-control delete" title="Eliminar">🗑️</button>
+                    </div>
                 `;
+                
+                li.querySelector('.move-up').addEventListener('click', () => window.moveExercise(index, exIndex, -1));
+                li.querySelector('.move-down').addEventListener('click', () => window.moveExercise(index, exIndex, 1));
+                li.querySelector('.delete').addEventListener('click', () => window.removeExercise(index, exIndex));
+                
+                editListUl.appendChild(li);
             });
-            listHtml += '</ul>';
-            
+
             editContent.innerHTML = `
                 <h2>Editar: ${routine.name}</h2>
                 <div class="form-group" style="margin-bottom: 2rem;">
@@ -441,14 +591,90 @@ document.addEventListener('DOMContentLoaded', () => {
                     <input type="text" id="editRoutineName" value="${routine.name}">
                 </div>
                 <h3>Ordre dels exercicis</h3>
-                ${listHtml}
-                <button class="save-btn" onclick="window.saveEditedRoutine(${index})">Guardar canvis</button>
             `;
+            editContent.appendChild(editListUl);
+            
+            const addBtn = document.createElement('button');
+            addBtn.className = 'btn-text';
+            addBtn.style.cssText = "color: var(--primary); font-weight: 600; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; background: none; border: none; cursor: pointer; padding: 0.5rem 0;";
+            addBtn.innerHTML = `<span>+</span> Afegir exercici`;
+            addBtn.onclick = () => window.showAddExerciseList(index);
+            editContent.appendChild(addBtn);
+
+            const container = document.createElement('div');
+            container.id = 'addExerciseContainer';
+            container.className = 'hidden';
+            editContent.appendChild(container);
+
+            const saveBtn = document.createElement('button');
+            saveBtn.className = 'save-btn';
+            saveBtn.innerText = 'Guardar canvis';
+            saveBtn.onclick = () => window.saveEditedRoutine(index);
+            editContent.appendChild(saveBtn);
         };
 
         renderEditList();
         editModal.classList.add('open');
         history.pushState({ modal: 'editRoutine' }, '', '#edit');
+
+        window.showAddExerciseList = (rIdx) => {
+            const container = document.getElementById('addExerciseContainer');
+            container.classList.remove('hidden');
+            
+            // Llista simplificada d'exercicis per triar
+            const availableExercises = CATALEG_EXERCICIS.sort((a,b) => a.nom.localeCompare(b.nom));
+            
+            let html = `
+                <div class="add-exercise-selection">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <h4 style="margin: 0;">Tria un exercici:</h4>
+                        <button class="btn-icon-delete" style="padding: 0.2rem 0.6rem; font-size: 0.8rem;" onclick="document.getElementById('addExerciseContainer').classList.add('hidden')">Tancar llista</button>
+                    </div>
+                    <div class="search-box" style="margin-bottom: 1rem;">
+                        <input type="text" id="addExSearch" placeholder="Cerca exercici..." style="width: 100%; padding: 0.6rem; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-dark); color: white;" oninput="window.filterAddExerciseList()">
+                    </div>
+                    <div class="add-exercise-list-scroll" id="addExListScroll">
+            `;
+            
+            const renderAddExItems = (filteredList) => {
+                let itemsHtml = '';
+                filteredList.forEach(ex => {
+                    const exImg = `img/${generarNomFitxer(ex.nom)}.jpg`;
+                    itemsHtml += `
+                        <div class="add-exercise-item" onclick="window.addExerciseToRoutine(${rIdx}, '${ex.id}')">
+                            <img src="${exImg}" class="edit-item-img" style="width: 40px; height: 40px;" onerror="this.onerror=null;this.src='https://placehold.co/100x100/111/4facfe?text=?'">
+                            <div class="add-ex-info">
+                                <span class="add-ex-name">${ex.nom}</span>
+                                <span class="add-ex-cat">${ex.categoria}</span>
+                            </div>
+                            <button class="btn-edit-control">+</button>
+                        </div>
+                    `;
+                });
+                return itemsHtml;
+            };
+            
+            html += renderAddExItems(availableExercises);
+            html += `</div></div>`;
+            container.innerHTML = html;
+            
+            window.filterAddExerciseList = () => {
+                const query = document.getElementById('addExSearch').value.toLowerCase();
+                const filtered = availableExercises.filter(ex => 
+                    ex.nom.toLowerCase().includes(query) || 
+                    ex.categoria.toLowerCase().includes(query)
+                );
+                document.getElementById('addExListScroll').innerHTML = renderAddExItems(filtered);
+            };
+
+            container.scrollIntoView({ behavior: 'smooth' });
+        };
+
+        window.addExerciseToRoutine = (rIdx, exId) => {
+            routines[rIdx].exercises.push(exId);
+            document.getElementById('addExerciseContainer').classList.add('hidden');
+            renderEditList();
+        };
         
         window.moveExercise = (rIdx, eIdx, direction) => {
             const r = routines[rIdx];
@@ -461,17 +687,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
-        window.removeExercise = (rIdx, eIdx) => {
-            const r = routines[rIdx];
-            if (r.exercises.length <= 1) {
-                alert("La rutina ha de tenir almenys un exercici.");
-                return;
-            }
-            if (confirm("Segur que vols eliminar aquest exercici de la rutina?")) {
-                r.exercises.splice(eIdx, 1);
-                renderEditList();
-            }
-        };
+        // window.removeExercise was moved to top level
 
         window.saveEditedRoutine = (rIdx) => {
             const newName = document.getElementById('editRoutineName').value.trim();

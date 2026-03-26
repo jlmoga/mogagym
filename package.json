@@ -1,7 +1,7 @@
 {
-  "name": "mogagym",
+  "name": "kora360",
   "version": "1.0.0",
-  "description": "App de Gimnàstica Personalitzada",
+  "description": "Kora 360 - App de Gimnàstica Personalitzada",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

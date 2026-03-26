@@ -15,7 +15,7 @@ app.use((req, res) => {
 // Escoltar en 0.0.0.0 per permetre l'accés des de la xarxa local (Android)
 app.listen(PORT, '0.0.0.0', () => {
     console.log('\n=======================================');
-    console.log('🚀 SERVIDOR DE GIMNÀS ESTABLE ACTIU');
+    console.log('🚀 KORA 360 - SERVIDOR ACTIU');
     console.log(`🏠 Accés local: http://localhost:${PORT}`);
     console.log('📱 Accés des d\'Android: Busca la teva IP local');
     console.log('=======================================\n');

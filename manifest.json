@@ -1,7 +1,7 @@
 {
-  "name": "MoGa Gym",
-  "short_name": "MoGa Gym",
-  "description": "App de gimnàstica personalitzada MoGa",
+  "name": "Kora 360",
+  "short_name": "Kora 360",
+  "description": "App de gimnàstica personalitzada Kora 360",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#0f172a",

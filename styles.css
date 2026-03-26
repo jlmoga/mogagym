@@ -591,7 +591,9 @@ h1, h2, h3 {
     background-color: rgba(0, 0, 0, 0.8);
     backdrop-filter: blur(10px);
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
+    overflow-y: auto;
+    padding: 2rem 0;
 }
 
 .modal.open {
@@ -1127,6 +1129,15 @@ h1, h2, h3 {
     font-weight: 500;
 }
 
+.edit-item-img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
 .edit-controls {
     display: flex;
     gap: 0.4rem;
@@ -1157,9 +1168,16 @@ h1, h2, h3 {
     cursor: not-allowed;
 }
 
-.btn-edit-control.delete:hover {
+.btn-edit-control.delete {
+    background: rgba(255, 82, 82, 0.1);
     color: #ff5252;
-    border-color: #ff5252;
+    border: 1px solid rgba(255, 82, 82, 0.2);
+}
+
+.btn-edit-control.delete:hover:not(:disabled) {
+    background: rgba(255, 82, 82, 0.2);
+    color: #ff5252;
+    border-color: rgba(255, 82, 82, 0.4);
 }
 
 /* Botó d'edició a la card de rutina */
@@ -1249,4 +1267,76 @@ input:checked + .slider {
 input:checked + .slider:before {
     transform: translateX(24px);
     background-color: var(--bg-dark);
+}
+
+/* --- ESTILS PER AFEGIR EXERCICIS DES D'EDICIÓ --- */
+.add-exercise-selection {
+    background: rgba(0, 0, 0, 0.2);
+    padding: 1.5rem;
+    border-radius: 20px;
+    margin: 1.5rem 0;
+    border: 1px dashed var(--primary);
+    animation: fadeIn 0.3s ease;
+}
+
+.add-exercise-list-scroll {
+    max-height: 250px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-right: 0.5rem;
+}
+
+.add-exercise-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--bg-card);
+    padding: 0.6rem 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    border: 1px solid transparent;
+}
+
+.add-exercise-item:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--primary);
+}
+
+.add-ex-info {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.add-ex-name {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.add-ex-cat {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+}
+
+/* --- ESTILS EXECUCIÓ (OPCIONS) --- */
+.execution-options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 1rem;
+    border-radius: 15px;
+    margin-bottom: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.random-toggle-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
 }
