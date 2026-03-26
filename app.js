@@ -15,6 +15,19 @@ function generarNomFitxer(nom) {
 document.addEventListener('DOMContentLoaded', () => {
     // --- GESTIÓ DE NAVEGACIÓ (HISTORY API) ---
     function navegarA(view, push = true) {
+        // --- PROTECCIÓ CONTRA VISTES INVÀLIDES (Evitar pantalla en blanc) ---
+        const validViews = ['catalog', 'routines', 'profile'];
+        if (!validViews.includes(view)) {
+            // Si estem en un hash desconegut (Ex: #modal), provem d'anar a l'historial anterior 
+            // o default catalog
+            if (view === 'modal' || view === 'save' || view === 'detail' || view === 'edit') {
+                // No fem res, esperem que el popstate gestioni el modal.
+                // Però ens assegurem que la vista subjacent encara sigui visible.
+                return;
+            }
+            view = 'catalog'; // Fallback
+        }
+
         // Actualitzar classes de les pestanyes
         navTabs.forEach(t => {
             if (t.getAttribute('data-view') === view) {
@@ -226,6 +239,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="progress-container">
                     <div class="progress-bar" style="width: ${progress}%"></div>
                 </div>
+                <div class="random-toggle-container">
+                    <div class="random-toggle-label">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.73 11.09l-1.41 1.41 3.13 3.13L14.5 22H20v-5.5l-2.04 2.04-2.73-2.73z"/></svg>
+                        <span>Mode Aleatori</span>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="randomModeToggle" ${currentRoutineExecution.isRandom ? 'checked' : ''}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
                 <div class="nav-btns-step">
                     <button class="btn-step" id="prevStep" ${currentIndex === 0 ? 'disabled' : ''}>← Anterior</button>
                     <span>${currentIndex + 1} / ${items.length}</span>
@@ -273,6 +296,39 @@ document.addEventListener('DOMContentLoaded', () => {
                     finishRoutine();
                 }
             });
+
+            // Toggle de mode aleatori
+            document.getElementById('randomModeToggle')?.addEventListener('change', (e) => {
+                const isRandom = e.target.checked;
+                currentRoutineExecution.isRandom = isRandom;
+                
+                if (isRandom) {
+                    // Shufflem els exercicis que queden (inclòs l'actual)
+                    const currentIndex = currentRoutineExecution.currentIndex;
+                    const items = [...currentRoutineExecution.items];
+                    const currentItem = items[currentIndex];
+                    
+                    // Separem el que ja hem fet i el que queda
+                    const done = items.slice(0, currentIndex);
+                    const remaining = items.slice(currentIndex + 1);
+                    
+                    // Shufflem el que queda
+                    for (let i = remaining.length - 1; i > 0; i--) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [remaining[i], remaining[j]] = [remaining[j], remaining[i]];
+                    }
+                    
+                    currentRoutineExecution.items = [...done, currentItem, ...remaining];
+                    // Guardem l'ordre original per si es desactiva? 
+                    // Millor no, si es desactiva es queda amb l'ordre "shuffled" actual
+                } else {
+                    // Si es desactiva, potser voldria tornar a l'ordre original...
+                    // Però per simplicitat, mantenim l'ordre actual.
+                }
+                
+                // Refresquem el modal per actualitzar el comptador si hagués canviat res (tot i que no canvia)
+                // En realitat només ens cal per guardar l'estat.
+            });
         } else {
             // Tornar a posar el listener al botó "Entès" dinàmic si no és rutina
             content.querySelector('.close-btn-action').addEventListener('click', () => {
@@ -283,7 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
     window.openExecutionModal = openExecutionModal; // Make globally accessible for onclick
 
     function finishRoutine() {
-        executionModal.classList.remove('open');
+        if (executionModal.classList.contains('open')) {
+            history.back(); // Això ja tanca el modal a través del popstate
+        }
         currentRoutineExecution = null;
         alert("Enhorabona! Has completat la teva rutina. 🎉");
     }
@@ -321,6 +379,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <button class="btn-play" title="Executar Rutina" onclick="event.stopPropagation(); window.startRoutine(${index})">
                         <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
                     </button>
+                    <button class="btn-icon-edit" title="Editar Rutina" onclick="event.stopPropagation(); window.openEditRoutine(${index})">
+                        <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                    </button>
                     <button class="btn-icon-delete" title="Eliminar Rutina" onclick="event.stopPropagation(); window.deleteRoutine(${index})">
                         <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
                     </button>
@@ -346,6 +407,83 @@ document.addEventListener('DOMContentLoaded', () => {
             saveRoutines();
             renderRoutines();
         }
+    };
+
+    // --- EDICIÓ DE RUTINES ---
+    window.openEditRoutine = (index) => {
+        const routine = routines[index];
+        const editModal = document.getElementById('editRoutineModal');
+        const editContent = document.getElementById('editRoutineContent');
+        
+        const renderEditList = () => {
+            let listHtml = '<ul class="edit-list">';
+            routine.exercises.forEach((exId, exIndex) => {
+                const ex = CATALEG_EXERCICIS.find(e => e.id === exId);
+                const exName = ex ? ex.nom : "Exercici desconegut";
+                
+                listHtml += `
+                    <li class="edit-item">
+                        <span class="edit-item-name">${exName}</span>
+                        <div class="edit-controls">
+                            <button class="btn-edit-control" onclick="window.moveExercise(${index}, ${exIndex}, -1)" ${exIndex === 0 ? 'disabled' : ''} title="Moure amunt">↑</button>
+                            <button class="btn-edit-control" onclick="window.moveExercise(${index}, ${exIndex}, 1)" ${exIndex === routine.exercises.length - 1 ? 'disabled' : ''} title="Moure avall">↓</button>
+                            <button class="btn-edit-control delete" onclick="window.removeExercise(${index}, ${exIndex})" title="Eliminar">🗑️</button>
+                        </div>
+                    </li>
+                `;
+            });
+            listHtml += '</ul>';
+            
+            editContent.innerHTML = `
+                <h2>Editar: ${routine.name}</h2>
+                <div class="form-group" style="margin-bottom: 2rem;">
+                    <label>Nom de la rutina</label>
+                    <input type="text" id="editRoutineName" value="${routine.name}">
+                </div>
+                <h3>Ordre dels exercicis</h3>
+                ${listHtml}
+                <button class="save-btn" onclick="window.saveEditedRoutine(${index})">Guardar canvis</button>
+            `;
+        };
+
+        renderEditList();
+        editModal.classList.add('open');
+        history.pushState({ modal: 'editRoutine' }, '', '#edit');
+        
+        window.moveExercise = (rIdx, eIdx, direction) => {
+            const r = routines[rIdx];
+            const targetIdx = eIdx + direction;
+            if (targetIdx >= 0 && targetIdx < r.exercises.length) {
+                const temp = r.exercises[eIdx];
+                r.exercises[eIdx] = r.exercises[targetIdx];
+                r.exercises[targetIdx] = temp;
+                renderEditList();
+            }
+        };
+
+        window.removeExercise = (rIdx, eIdx) => {
+            const r = routines[rIdx];
+            if (r.exercises.length <= 1) {
+                alert("La rutina ha de tenir almenys un exercici.");
+                return;
+            }
+            if (confirm("Segur que vols eliminar aquest exercici de la rutina?")) {
+                r.exercises.splice(eIdx, 1);
+                renderEditList();
+            }
+        };
+
+        window.saveEditedRoutine = (rIdx) => {
+            const newName = document.getElementById('editRoutineName').value.trim();
+            if (newName) {
+                routines[rIdx].name = newName;
+                saveRoutines();
+                renderRoutines();
+                history.back(); // Tancar modal
+            } else {
+                alert("La rutina ha de tenir un nom.");
+            }
+        };
     };
 
     // --- LOGICA DE SELECCIÓ ---
@@ -499,26 +637,41 @@ document.addEventListener('DOMContentLoaded', () => {
         const saveRoutineModal = document.getElementById('saveRoutineModal');
 
         // 1. Si hi ha modals oberts, els tanquem
+        // No fem 'return' aquí perquè si la URL ha canviat a una pestanya, hem de carregar-la.
+        let modalClosed = false;
         if (detailModal.classList.contains('open')) {
             detailModal.classList.remove('open');
-            return;
+            modalClosed = true;
         }
         if (executionModal.classList.contains('open')) {
             executionModal.classList.remove('open');
-            return;
+            modalClosed = true;
+        }
+        if (editRoutineModal.classList.contains('open')) {
+            editRoutineModal.classList.remove('open');
+            modalClosed = true;
         }
         if (saveRoutineModal.classList.contains('open')) {
             saveRoutineModal.classList.remove('open');
-            return;
+            modalClosed = true;
         }
 
         // 2. Gestionar el canvi de vista
         const currentHash = window.location.hash.replace('#', '') || 'catalog';
         const viewToLoad = (event.state && event.state.view) ? event.state.view : currentHash;
         
-        // Evitar bucles infinits: només navegarA si la vista és diferent de l'actual
-        // o si forcem la càrrega des de l'estat
-        navegarA(viewToLoad, false);
+        // Si el hash no és un dels modals, forcem la càrrega de la vista
+        const validViews = ['catalog', 'routines', 'profile'];
+        if (validViews.includes(viewToLoad)) {
+            navegarA(viewToLoad, false);
+        } else if (modalClosed) {
+            // Si hem tancat un modal però el hash és un altre modal o invàlid,
+            // ens assegurem que almenys una secció sigui visible
+            const visibleSection = document.querySelector('.view-section:not(.hidden)');
+            if (!visibleSection) {
+                navegarA('catalog', false);
+            }
+        }
     });
 
     btnNewRoutine.addEventListener('click', () => {
@@ -557,7 +710,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Tancar el modal de guardar rutina amb la X
     saveRoutineModal.querySelector('.close-modal').addEventListener('click', () => {
-        saveRoutineModal.classList.remove('open');
+        history.back();
+    });
+
+    // Tancar el modal d'editar rutina amb la X
+    document.querySelector('#editRoutineModal .close-modal').addEventListener('click', () => {
+        history.back();
     });
 
     // Inicialització
