@@ -373,7 +373,6 @@ document.addEventListener('DOMContentLoaded', () => {
             history.back(); // Això ja tanca el modal a través del popstate
         }
         currentRoutineExecution = null;
-        alert("Enhorabona! Has completat la teva rutina. 🎉");
     }
 
     // --- GESTIÓ DE RUTINES ---

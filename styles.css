@@ -281,7 +281,7 @@ h1, h2, h3 {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 2rem;
-    padding-bottom: 5rem;
+    padding-bottom: 2.5rem;
 }
 
 /* Card d'Exercici */
@@ -862,7 +862,7 @@ h1, h2, h3 {
 /* Rutines Section */
 .view-section {
     padding-top: 1rem;
-    padding-bottom: 3rem;
+    padding-bottom: 1.5rem;
     transition: opacity 0.3s ease;
 }
 
@@ -1091,7 +1091,7 @@ h1, h2, h3 {
     padding: 3rem 0;
     text-align: center;
     border-top: 1px solid var(--border-color);
-    margin-top: 2rem;
+    margin-top: 1rem;
     clear: both;
 }
 
