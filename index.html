@@ -34,9 +34,10 @@
             <p class="subtitle">Explora el catàleg i crea la teva rutina ideal.</p>
 
             <nav class="main-nav">
-                <button class="nav-tab active" data-view="catalog">Explorar</button>
-                <button class="nav-tab" data-view="routines">Les meves rutines</button>
-                <button class="nav-tab" data-view="profile">El meu perfil</button>
+                <div class="nav-tab active" data-view="catalog">Explorar</div>
+                <div class="nav-tab" data-view="routines">Les meves rutines</div>
+                <div class="nav-tab" data-view="activity">Registre</div>
+                <div class="nav-tab" data-view="profile">El meu perfil</div>
             </nav>
 
             <div class="filter-row" id="catalogFilters">
@@ -44,7 +45,7 @@
                     <button class="filter-btn active" data-category="tots">Tots</button>
                     <button class="filter-btn" data-category="Cames">Cames</button>
                     <button class="filter-btn" data-category="Empenta">Empenta</button>
-                    <button class="filter-btn" data-category="Tracció i cardio">Tracció</button>
+                    <button class="filter-btn" data-category="Tracció">Tracció</button>
                     <button class="filter-btn" data-category="Core">Core</button>
                 </nav>
 
@@ -113,6 +114,22 @@
                 <div id="exerciseGrid" class="exercise-grid">
                     <!-- Els exercicis es carregaran dinàmicament aquí -->
                     <div class="loading">Carregant catàleg...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Secció Registre d'Activitat -->
+        <section id="activitySection" class="view-section hidden">
+            <div class="container">
+                <header class="section-header">
+                    <h1>Registre d'Activitat</h1>
+                    <p>Historial de les teves sessions d'entrenament</p>
+                </header>
+                <div id="activityLogList" class="activity-log-list">
+                    <!-- Contingut generat per JS -->
+                    <div class="loading">
+                        <p>Carregant historial...</p>
+                    </div>
                 </div>
             </div>
         </section>
@@ -221,7 +238,7 @@
     <footer class="main-footer">
         <div class="container">
             <p>&copy; 2026 <a href="https://www.calaixagil.com" target="_blank"
-                    style="color: inherit; text-decoration: none;">calaix[À]gil.com</a> - v1.9</p>
+                    style="color: inherit; text-decoration: none;">calaix[À]gil.com</a> - v2.0</p>
         </div>
     </footer>
 

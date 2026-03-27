@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- GESTIÓ DE NAVEGACIÓ (HISTORY API) ---
     function navegarA(view, push = true) {
         // --- PROTECCIÓ CONTRA VISTES INVÀLIDES (Evitar pantalla en blanc) ---
-        const validViews = ['catalog', 'routines', 'profile'];
+        const validViews = ['catalog', 'routines', 'activity', 'profile'];
         if (!validViews.includes(view)) {
             // Si estem en un hash desconegut (Ex: #modal), provem d'anar a l'historial anterior 
             // o default catalog
@@ -58,6 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
         catalogSection.classList.toggle('hidden', view !== 'catalog');
         routinesSection.classList.toggle('hidden', view !== 'routines');
         profileSection.classList.toggle('hidden', view !== 'profile');
+        activitySection.classList.toggle('hidden', view !== 'activity');
         catalogFilters.classList.toggle('hidden', view !== 'catalog');
 
         // Executar renderitzats segons la vista
@@ -65,6 +66,8 @@ document.addEventListener('DOMContentLoaded', () => {
             updateDisplay();
         } else if (view === 'routines') {
             renderRoutines();
+        } else if (view === 'activity') {
+            renderActivityLog();
         }
 
         // Guardar a l'historial
@@ -92,8 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const catalogSection = document.getElementById('catalogSection');
     const routinesSection = document.getElementById('routinesSection');
     const profileSection = document.getElementById('profileSection');
+    const activitySection = document.getElementById('activitySection');
     const catalogFilters = document.getElementById('catalogFilters');
     const routinesList = document.getElementById('routinesList');
+    const activityLogList = document.getElementById('activityLogList');
     const btnNewRoutine = document.getElementById('btnNewRoutine');
     const selectionBar = document.getElementById('selectionActionBar');
     const selectionCount = document.getElementById('selectionCount');
@@ -113,7 +118,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     let routines = JSON.parse(localStorage.getItem('kora360_routines')) || [];
+    let activityLog = JSON.parse(localStorage.getItem('kora360_activity_log')) || [];
     let currentRoutineExecution = null;
+    const fitnessLevelMap = {
+        'beginner': 1,
+        'intermediate': 2,
+        'advanced': 3
+    };
     let profile = {
         theme: 'dark',
         age: 30,
@@ -124,6 +135,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- GESTIÓ DE WAKE LOCK (Pantalla encesa) ---
     let wakeLock = null;
+
+    function recordStepTime() {
+        if (!currentRoutineExecution) return;
+        const now = Date.now();
+        const elapsed = now - currentRoutineExecution.stepStartTime;
+        
+        const currentItem = currentRoutineExecution.items[currentRoutineExecution.currentIndex];
+        if (currentItem && currentItem.id === 'descans-01') {
+            currentRoutineExecution.totalRestMs += elapsed;
+        }
+        
+        currentRoutineExecution.stepStartTime = now;
+    }
 
     async function requestWakeLock() {
         if ('wakeLock' in navigator) {
@@ -189,6 +213,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- LÒGICA D'ADAPTACIÓ ---
     function getExecutionGoal(exercise) {
+        if (exercise.nom === 'Descans') {
+            return { sets: 1, reps: "60 s", extra: " de descans", isCount: true };
+        }
         // Multiplicadors per nivell
         const multipliers = {
             'beginner': { reps: 0.8, weight: 0.5, sets: 0 },
@@ -245,9 +272,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const ex = CATALEG_EXERCICIS.find(e => e.id === exId);
         const detailContent = document.getElementById('detailContent');
         
+        const nomFitxer = ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`;
         detailContent.innerHTML = `
             <h2>${ex.nom}</h2>
-            <img src="img/${generarNomFitxer(ex.nom)}.jpg" class="modal-img-small" alt="${ex.nom}" 
+            <img src="img/${nomFitxer}" class="modal-img-small" alt="${ex.nom}" 
                  onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
             
             <div class="detail-complexity-box">
@@ -277,8 +305,10 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
         `;
         
-        detailModal.classList.add('open');
-        history.pushState({ modal: 'detail' }, '', '#detail');
+        if (!detailModal.classList.contains('open')) {
+            detailModal.classList.add('open');
+            history.pushState({ modal: 'detail' }, '', '#detail');
+        }
     }
 
     window.switchDetailTab = (tabName) => {
@@ -361,10 +391,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const exItem = isRoutine ? CATALEG_EXERCICIS.find(e => e.id === item.id) : ex;
         const goalText = goal.isCount ? `${goal.reps}${goal.extra}` : `SÈRIE ${item.set} de ${goal.sets} (${goal.reps} reps${goal.extra})`;
 
+        const nomFitxer = ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`;
         content.innerHTML = `
             <h2>${ex.nom}</h2>
             <div class="execution-header-compact">
-                <img src="img/${generarNomFitxer(ex.nom)}.jpg" class="modal-img" alt="${ex.nom}" 
+                <img src="img/${nomFitxer}" class="modal-img" alt="${ex.nom}" 
                      onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
                 <div class="goal-highlight">
                     <h4>El teu objectiu per avui:</h4>
@@ -375,19 +406,28 @@ document.addEventListener('DOMContentLoaded', () => {
             <p class="modal-desc">${ex.instruccions}</p>
             ${routineControls}
         `;
-        executionModal.classList.add('open');
-        requestWakeLock(); // Activar Wake Lock
-        // Afegir estat a l'historial perquè el botó "Back" tanqui el modal
-        history.pushState({ modal: 'execution' }, '', '#modal');
+        if (!executionModal.classList.contains('open')) {
+            executionModal.classList.add('open');
+            requestWakeLock(); // Activar Wake Lock
+            // Afegir estat a l'historial perquè el botó "Back" tanqui el modal
+            history.pushState({ modal: 'execution' }, '', '#modal');
+        }
 
         // Handlers de la rutina
         if (isRoutine) {
             document.getElementById('prevStep')?.addEventListener('click', () => {
+                recordStepTime();
                 currentRoutineExecution.currentIndex--;
                 const item = currentRoutineExecution.items[currentRoutineExecution.currentIndex];
                 openExecutionModal(item.id, true);
             });
             document.getElementById('nextStep')?.addEventListener('click', () => {
+                recordStepTime();
+                // Tracking de progrés
+                if (currentRoutineExecution) {
+                    currentRoutineExecution.completedIndices.add(currentRoutineExecution.currentIndex);
+                }
+
                 if (currentRoutineExecution.currentIndex < currentRoutineExecution.items.length - 1) {
                     currentRoutineExecution.currentIndex++;
                     const item = currentRoutineExecution.items[currentRoutineExecution.currentIndex];
@@ -446,8 +486,74 @@ document.addEventListener('DOMContentLoaded', () => {
     window.openExecutionModal = openExecutionModal; // Make globally accessible for onclick
 
     function finishRoutine() {
+        if (!currentRoutineExecution) return;
+        recordStepTime();
+
+        const endTime = new Date();
+        const startTime = currentRoutineExecution.startTime;
+        const routineName = currentRoutineExecution.routineName;
+        const totalItems = currentRoutineExecution.items.length;
+        
+        // Assegurar que el darrer ítem també es compta si s'ha arribat fins al final
         if (executionModal.classList.contains('open')) {
-            history.back(); // Això ja tanca el modal a través del popstate
+            currentRoutineExecution.completedIndices.add(currentRoutineExecution.currentIndex);
+        }
+
+        // Identificar i comptar només exercicis de treball (no descansos)
+        const workItemsIndices = [];
+        currentRoutineExecution.items.forEach((item, idx) => {
+            if (item.id !== 'descans-01') {
+                workItemsIndices.push(idx);
+            }
+        });
+        
+        const totalWorkItems = workItemsIndices.length;
+        const completedWorkIndices = [...currentRoutineExecution.completedIndices]
+            .filter(idx => workItemsIndices.includes(idx));
+        
+        const completedWorkCount = completedWorkIndices.length;
+        const progress = totalWorkItems > 0 ? (completedWorkCount / totalWorkItems) * 100 : 100;
+
+        // Regla de Qualitat: mímim 20% de treball real
+        if (progress >= 20) {
+            // Càlcul d'Intensitat: E = Sum(I) / C
+            let sumIntensity = 0;
+            completedWorkIndices.forEach(idx => {
+                const item = currentRoutineExecution.items[idx];
+                const ex = CATALEG_EXERCICIS.find(e => e.id === item.id);
+                if (ex) {
+                    sumIntensity += (ex.complexitat || 3);
+                }
+            });
+
+            const C = fitnessLevelMap[profile.level] || 2;
+            const finalIntensity = (sumIntensity / C).toFixed(1);
+
+            const avgComplexity = completedWorkCount > 0 ? (sumIntensity / completedWorkCount).toFixed(1) : 0;
+
+            const session = {
+                id: Date.now(),
+                date: startTime.toLocaleDateString(),
+                routineName: routineName,
+                startTime: startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                endTime: endTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                duration: Math.max(1, Math.round(((endTime - startTime) - currentRoutineExecution.totalRestMs) / 60000)), // minuts, mínim 1 per evitar 0
+                intensity: finalIntensity,
+                avgComplexity: parseFloat(avgComplexity),
+                progress: Math.round(progress),
+                status: progress >= 100 ? 'Completada' : 'Parcial'
+            };
+
+            activityLog.unshift(session);
+            localStorage.setItem('kora360_activity_log', JSON.stringify(activityLog));
+        }
+
+        if (executionModal.classList.contains('open')) {
+            executionModal.classList.remove('open');
+            releaseWakeLock();
+            if (window.location.hash === '#modal') {
+                history.back();
+            }
         }
         currentRoutineExecution = null;
     }
@@ -512,6 +618,69 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function renderActivityLog() {
+        activityLogList.innerHTML = '';
+        if (activityLog.length === 0) {
+            activityLogList.innerHTML = `<div class="empty-state">Encara no tens cap sessió registrada.</div>`;
+            return;
+        }
+
+        activityLog.forEach(session => {
+            const card = document.createElement('div');
+            card.className = 'activity-card';
+            
+            card.innerHTML = `
+                <div class="activity-header">
+                    <div class="activity-date-info">
+                        <span class="activity-date">${session.date}</span>
+                        <span class="activity-time">${session.startTime} - ${session.endTime}</span>
+                    </div>
+                    <div class="activity-header-right">
+                        <span class="activity-status ${session.status.toLowerCase()}">${session.status}</span>
+                        <button class="btn-icon-delete" title="Esborrar Registre">
+                            <svg viewBox="0 0 24 24" width="18" height="18"><path fill="currentColor" d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                        </button>
+                    </div>
+                </div>
+                <h3>${session.routineName}</h3>
+                <div class="activity-complexity" style="margin-bottom: 1.2rem; opacity: 0.9;">
+                    ${getComplexityStars(session.avgComplexity || 3)}
+                </div>
+                <div class="activity-stats">
+                    <div class="stat-item">
+                        <span class="stat-label">Durada</span>
+                        <span class="stat-val">${session.duration} min</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Progrés</span>
+                        <span class="stat-val">${session.progress}%</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Intensitat</span>
+                        <span class="stat-val intensity">${session.intensity}</span>
+                    </div>
+                </div>
+                </div>
+            `;
+            
+            card.querySelector('.btn-icon-delete').addEventListener('click', (e) => {
+                e.stopPropagation();
+                const idx = activityLog.indexOf(session);
+                if (idx !== -1) {
+                    window.deleteActivityLogEntry(idx);
+                }
+            });
+
+            activityLogList.appendChild(card);
+        });
+    }
+
+    window.deleteActivityLogEntry = (index) => {
+        activityLog.splice(index, 1);
+        localStorage.setItem('kora360_activity_log', JSON.stringify(activityLog));
+        renderActivityLog();
+    };
+
     window.startRoutine = (index) => {
         const routine = routines[index];
         currentRoutineExecution = {
@@ -519,7 +688,12 @@ document.addEventListener('DOMContentLoaded', () => {
             isRandom: false,
             isCircuit: false,
             originalExercises: routine.exercises, // Guardem IDs originals
-            items: []
+            items: [],
+            startTime: new Date(),
+            routineName: routine.name,
+            completedIndices: new Set(),
+            totalRestMs: 0,
+            stepStartTime: Date.now()
         };
         regenerateSequence();
         openExecutionModal(currentRoutineExecution.items[0].id, true);
@@ -557,6 +731,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
                 newItems.push(...lap);
+                // Afegir descans després de cada volta completa en circuit
+                newItems.push({ id: 'descans-01', set: 1 });
             }
         } else {
             // Mode Normal
@@ -564,6 +740,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 for (let s = 1; s <= d.goal.sets; s++) {
                     newItems.push({ id: d.id, set: s });
                 }
+                // Afegir descans després de cada exercici en mode normal
+                newItems.push({ id: 'descans-01', set: 1 });
             });
             
             if (isRandom) {
@@ -585,6 +763,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 newItems = exerciseBlocks.flat();
             }
+        }
+
+        // Treure l'últim descans per evitar un descans abans de finalitzar la rutina
+        if (newItems.length > 0 && newItems[newItems.length - 1].id === 'descans-01') {
+            newItems.pop();
         }
 
         // Si ja estàvem executant, hem d'intentar mantenir el punt on estàvem?
@@ -635,7 +818,7 @@ document.addEventListener('DOMContentLoaded', () => {
             routine.exercises.forEach((exId, exIndex) => {
                 const ex = CATALEG_EXERCICIS.find(e => e.id === exId);
                 const exName = ex ? ex.nom : "Exercici desconegut";
-                const exImg = ex ? `img/${generarNomFitxer(ex.nom)}.jpg` : 'https://placehold.co/100x100/111/4facfe?text=?';
+                const exImg = ex ? (ex.nom === 'Descans' ? 'img/descans.png' : `img/${generarNomFitxer(ex.nom)}.jpg`) : 'https://placehold.co/100x100/111/4facfe?text=?';
                 
                 const li = document.createElement('li');
                 li.className = 'edit-item';
@@ -695,8 +878,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const container = document.getElementById('addExerciseContainer');
             container.classList.remove('hidden');
             
-            // Llista simplificada d'exercicis per triar
-            const availableExercises = CATALEG_EXERCICIS.sort((a,b) => a.nom.localeCompare(b.nom));
+            // Llista simplificada d'exercicis per triar (excloent ocults)
+            const availableExercises = CATALEG_EXERCICIS
+                .filter(ex => !ex.ocult)
+                .sort((a,b) => a.nom.localeCompare(b.nom));
             
             let html = `
                 <div class="add-exercise-selection">
@@ -713,7 +898,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const renderAddExItems = (filteredList) => {
                 let itemsHtml = '';
                 filteredList.forEach(ex => {
-                    const exImg = `img/${generarNomFitxer(ex.nom)}.jpg`;
+                    const exImg = ex.nom === 'Descans' ? 'img/descans.png' : `img/${generarNomFitxer(ex.nom)}.jpg`;
                     itemsHtml += `
                         <div class="add-exercise-item" onclick="window.addExerciseToRoutine(${rIdx}, '${ex.id}')">
                             <img src="${exImg}" class="edit-item-img" style="width: 40px; height: 40px;" onerror="this.onerror=null;this.src='https://placehold.co/100x100/111/4facfe?text=?'">
@@ -796,9 +981,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function updateDisplay() {
         const filtered = CATALEG_EXERCICIS.filter(ex => {
+            if (ex.ocult) return false;
+            
+            // 1. Filtre de categoria
             const categoryMatch = (currentCategory === 'tots' || ex.categoria === currentCategory);
-            const materialsMatch = ex.materials.every(m => activeMaterials.includes(m));
-            return categoryMatch && materialsMatch;
+            if (!categoryMatch) return false;
+
+            // 2. Filtre de materials (Lògica Híbrida: Descobriment + Inventari)
+            // Si no hi ha cap material seleccionat, no mostrem res (segons preferència usuari)
+            if (activeMaterials.length === 0) return false;
+
+            // L'exercici ha de contenir ALMENYS UN dels materials seleccionats (Descobriment)
+            const matchesSelectedMaterial = ex.materials.some(m => activeMaterials.includes(m));
+            if (!matchesSelectedMaterial) return false;
+
+            // A més, l'usuari ha de tenir TOTS els materials que l'exercici requereix (Inventari)
+            // (Considerem 'pes_corporal' i 'cap' com a sempre disponibles per la lògica d'inventari)
+            const hasAllNeeded = ex.materials.every(m => 
+                m === 'pes_corporal' || m === 'cap' || activeMaterials.includes(m)
+            );
+            
+            return hasAllNeeded;
         });
         renderExercises(filtered);
     }
@@ -815,9 +1018,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const isSelected = selectedExercisesIds.includes(ex.id);
             card.className = `exercise-card ${isSelectionMode ? 'selecting' : ''} ${isSelected ? 'selected' : ''}`;
             
-            const nomImatge = generarNomFitxer(ex.nom);
+            const nomFitxer = ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`;
             card.innerHTML = `
-                <img src="img/${nomImatge}.jpg" alt="${ex.nom}" class="card-img" 
+                <img src="img/${nomFitxer}" alt="${ex.nom}" class="card-img" 
                      onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
                 <div class="card-content">
                     <span class="category-tag">${ex.categoria}</span>
@@ -956,7 +1159,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // 2. Gestionar el canvi de vista
         const currentHash = window.location.hash.replace('#', '') || 'catalog';
-        const viewToLoad = state.view ? state.view : (['catalog', 'routines', 'profile'].includes(currentHash) ? currentHash : 'catalog');
+        const viewToLoad = state.view ? state.view : (['catalog', 'routines', 'activity', 'profile'].includes(currentHash) ? currentHash : 'catalog');
         
         navegarA(viewToLoad, false);
     });

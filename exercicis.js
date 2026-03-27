@@ -22,7 +22,7 @@ const CATALEG_EXERCICIS = [
         categoria: "Cames",
         complexitat: 4,
         equipament: "Banqueta, peses (opcional)",
-        materials: ["banqueta", "peses"],
+        materials: ["banqueta", "pes_corporal"],
         repeticions_suggerides: "3 sèries de 10 repeticions per cama",
         instruccions: "Col·loca un peu darrere teu sobre la banqueta. Amb l'altra cama endavant, baixa le genoll posterior cap a terra mantenint el tors vertical. El genoll davanter ha de quedar alineat amb el turmell. Puja controladament.",
         benefici_salut: "Desenvolupa una gran força unilateral, millora l'equilibri i posa un èmfasi especial en el gluti major i el quàdriceps."
@@ -33,7 +33,7 @@ const CATALEG_EXERCICIS = [
         categoria: "Cames",
         complexitat: 2,
         equipament: "Banqueta, peses (opcional)",
-        materials: ["banqueta", "peses"],
+        materials: ["banqueta", "pes_corporal"],
         repeticions_suggerides: "3 sèries de 12 repeticions per cama",
         instruccions: "Col·loca un sencer sobre la banqueta. Empeny amb aquesta cama per elevar tot el cos fins a quedar dret sobre la banqueta. Baixa lentament per tornar a terra sense deixar caure el pes bruscament.",
         benefici_salut: "Millora la potència de les cames, la coordinació i és excel·lent per al treball cardiovascular de baixa intensitat combinat amb força."
@@ -209,7 +209,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-01",
         nom: "Màquina de rem",
-        categoria: "Tracció i cardio",
+        categoria: "Tracció",
         complexitat: 5,
         equipament: "Màquina de rem",
         materials: ["rem"],
@@ -222,7 +222,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-02",
         nom: "Rem a una mà (recolzat a banqueta)",
-        categoria: "Tracció i cardio",
+        categoria: "Tracció",
         complexitat: 3,
         equipament: "Banqueta, Peses",
         materials: ["banqueta", "peses"],
@@ -233,7 +233,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-03",
         nom: "Rem amb gomes (punt fix)",
-        categoria: "Tracció i cardio",
+        categoria: "Tracció",
         complexitat: 2,
         equipament: "Goma elàstica, Punt fix",
         materials: ["gomes"],
@@ -244,7 +244,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-04",
         nom: "Curl de bíceps dempeus",
-        categoria: "Tracció i cardio",
+        categoria: "Tracció",
         complexitat: 2,
         equipament: "Peses or Goma",
         materials: ["peses", "gomes"],
@@ -255,7 +255,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-05",
         nom: "Curl de bíceps concentrat",
-        categoria: "Tracció i cardio",
+        categoria: "Tracció",
         complexitat: 3,
         equipament: "Banqueta, Peses",
         materials: ["banqueta", "peses"],
@@ -266,7 +266,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-06",
         nom: "Face-pull amb gomes",
-        categoria: "Tracció i cardio",
+        categoria: "Tracció",
         complexitat: 4,
         equipament: "Goma elàstica, Punt fix",
         materials: ["gomes"],
@@ -277,7 +277,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-07",
         nom: "Rem vertical amb peses",
-        categoria: "Tracció i cardio",
+        categoria: "Tracció",
         complexitat: 3,
         equipament: "Peses",
         materials: ["peses"],
@@ -374,6 +374,18 @@ const CATALEG_EXERCICIS = [
         repeticions_suggerides: "3 sèries de 30 segons per costat",
         instruccions: "Dret, de costat al punt d'ancoratge de la goma. Subjecta la goma amb les dues mans davant del pit i estira-la endavant fins a bloquejar braços. Lluita contra la goma que t'estira lateralment cap al punt fix.",
         benefici_salut: "Exercici d'anti-rotació que enforteix els oblics i le core profund per protegir la columna de forces laterals inesperades."
+    },
+    {
+        id: "descans-01",
+        nom: "Descans",
+        categoria: "Altres",
+        ocult: true,
+        complexitat: 1,
+        equipament: "Cap",
+        materials: ["cap"],
+        repeticions_suggerides: "---",
+        instruccions: "Aprofita per hidratar-te i recuperar el alè per a la següent sèrie. No cal que corris. El temps dedicat al descans no constarà al registre d'activitat.",
+        benefici_salut: "Permet la recuperació muscular i del sistema nerviós."
     }
 ];
 

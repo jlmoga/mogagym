@@ -1528,3 +1528,155 @@ input:checked + .slider:before {
         height: 16px;
     }
 }
+
+/* Activity Log Styles */
+.activity-log-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+.activity-card {
+    background: var(--surface-variant);
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    transition: var(--transition-smooth);
+}
+
+.activity-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.8rem;
+}
+
+.activity-date-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.activity-date {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--on-surface);
+}
+
+.activity-time {
+    font-size: 0.75rem;
+    opacity: 0.6;
+}
+
+.activity-status {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 0.3rem 0.6rem;
+    border-radius: 8px;
+    letter-spacing: 0.5px;
+}
+
+.activity-status.completada {
+    background: rgba(76, 175, 80, 0.1);
+    color: #81c784;
+}
+
+.activity-status.parcial {
+    background: rgba(255, 152, 0, 0.1);
+    color: #ffb74d;
+}
+
+.activity-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 1.2rem;
+    color: var(--primary-color);
+}
+
+.activity-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.stat-label {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    opacity: 0.5;
+    letter-spacing: 0.5px;
+}
+
+.stat-val {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--on-surface);
+}
+
+.stat-val.intensity {
+    color: var(--primary);
+    background: var(--primary-container);
+    padding: 0.2rem 0.6rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    display: inline-block;
+    margin-top: 4px;
+}
+
+.activity-header-right {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.activity-card .btn-icon-delete {
+    background: rgba(255, 255, 255, 0.05);
+    border: none;
+    color: var(--text-secondary);
+    padding: 0.5rem;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.activity-card .btn-icon-delete:hover {
+    background: rgba(186, 26, 26, 0.1);
+    color: #ffb4ab;
+}
+
+/* Light Theme Adjustments */
+[data-theme="light"] .activity-card {
+    background: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+[data-theme="light"] .activity-status.completada {
+    background: #e8f5e9;
+    color: #2e7d32;
+}
+
+[data-theme="light"] .activity-status.parcial {
+    background: #fff3e0;
+    color: #ef6c00;
+}
+
+[data-theme="light"] .activity-stats {
+    border-top-color: rgba(0, 0, 0, 0.05);
+}
