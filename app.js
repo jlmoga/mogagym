@@ -12,6 +12,23 @@ function generarNomFitxer(nom) {
         .replace(/^-+|-+$/g, '');        // Netejar guionets al principi i al final
 }
 
+// Funció per generar les estrelles de complexitat
+function getComplexityStars(level) {
+    const maxStars = 5;
+    let starsHtml = '<div class="stars">';
+    for (let i = 1; i <= maxStars; i++) {
+        const starClass = i <= level ? 'star filled' : 'star';
+        starsHtml += `<span class="${starClass}">★</span>`;
+    }
+    starsHtml += '</div>';
+    return `
+        <div class="complexity-container">
+            <span class="complexity-label">Complexitat</span>
+            ${starsHtml}
+        </div>
+    `;
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     // --- GESTIÓ DE NAVEGACIÓ (HISTORY API) ---
     function navegarA(view, push = true) {
@@ -233,6 +250,10 @@ document.addEventListener('DOMContentLoaded', () => {
             <img src="img/${generarNomFitxer(ex.nom)}.jpg" class="modal-img-small" alt="${ex.nom}" 
                  onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
             
+            <div class="detail-complexity-box">
+                ${getComplexityStars(ex.complexitat || 3)}
+            </div>
+
             <div class="detail-tabs">
                 <button class="tab-btn active" onclick="switchDetailTab('instruccions')">Instruccions</button>
                 <button class="tab-btn" onclick="switchDetailTab('beneficis')">Beneficis</button>
@@ -348,6 +369,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="goal-highlight">
                     <h4>El teu objectiu per avui:</h4>
                     <div class="goal-val">${goalText}</div>
+                    ${getComplexityStars(ex.complexitat || 3)}
                 </div>
             </div>
             <p class="modal-desc">${ex.instruccions}</p>
@@ -666,7 +688,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         renderEditList();
-        editModal.classList.add('open');
+        editRoutineModal.classList.add('open');
         history.pushState({ modal: 'editRoutine' }, '', '#edit');
 
         window.showAddExerciseList = (rIdx) => {
@@ -800,7 +822,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="card-content">
                     <span class="category-tag">${ex.categoria}</span>
                     <h3>${ex.nom}</h3>
-                    <div class="rep-tag">${ex.repeticions_suggerides}</div>
+                    ${getComplexityStars(ex.complexitat || 3)}
+                    <span class="rep-tag">${ex.repeticions_suggerides}</span>
                     <p class="instructions">${ex.instruccions}</p>
                     <div class="benefit-box">
                         <strong>Benefici Salut:</strong>

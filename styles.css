@@ -410,6 +410,41 @@ h1, h2, h3 {
     color: var(--text-secondary);
 }
 
+/* --- COMPLEXITAT (ESTRELLES) --- */
+.complexity-container {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin-bottom: 0.5rem;
+}
+
+.complexity-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    margin-right: 0.2rem;
+    opacity: 0.8;
+}
+
+.stars {
+    display: flex;
+    gap: 1px;
+}
+
+.star {
+    font-size: 0.85rem;
+    color: var(--border-color);
+}
+
+.star.filled {
+    color: #FFD700;
+}
+
+[data-theme="light"] .star.filled {
+    color: #FBC02D;
+}
+
 /* Animació de càrrega */
 .loading {
     grid-column: 1 / -1;
@@ -563,9 +598,40 @@ h1, h2, h3 {
         line-height: 1.3;
     }
 
+    .execution-header-compact .goal-highlight .complexity-container {
+        margin-top: 0.5rem;
+        padding: 0;
+        background: none;
+        border: none;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2px;
+    }
+
+    .execution-header-compact .goal-highlight .complexity-label {
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        opacity: 0.6;
+    }
+
+    .execution-header-compact .goal-highlight .stars {
+        font-size: 0.8rem;
+        gap: 2px;
+    }
+
     .execution-card h2 {
         font-size: 1.4rem;
         margin-bottom: 0.8rem;
+    }
+
+    .complexity-container {
+        margin-bottom: 0.4rem;
+    }
+    
+    .star {
+        font-size: 1rem;
     }
 }
 
@@ -796,6 +862,27 @@ h1, h2, h3 {
     font-size: 1.25rem;
     font-weight: 800;
     color: var(--text-primary);
+}
+
+.detail-complexity-box {
+    margin: 1.5rem 0;
+    padding: 1.2rem;
+    background: rgba(171, 199, 255, 0.05);
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 1px solid var(--border-color);
+}
+
+.detail-complexity-box .complexity-label {
+    font-size: 0.9rem;
+    color: var(--primary);
+    margin-right: 1rem;
+}
+
+.detail-complexity-box .star {
+    font-size: 1.4rem;
 }
 
 .modal-img-small {
