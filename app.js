@@ -292,37 +292,49 @@ document.addEventListener('DOMContentLoaded', () => {
                 <div class="progress-container">
                     <div class="progress-bar" style="width: ${progress}%"></div>
                 </div>
-                <div class="execution-options">
-                    <div class="random-toggle-container">
-                        <div class="random-toggle-label">
-                            <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.73 11.09l-1.41 1.41 3.13 3.13L14.5 22H20v-5.5l-2.04 2.04-2.73-2.73z"/></svg>
-                            <span>Aleatori</span>
+                <div class="execution-footer">
+                    <p class="disclaimer-footer">
+                        Basat en les teves dades de perfil i el pes màxim de ${profile.maxWeight}kg.
+                    </p>
+                    <div class="execution-options">
+                        <div class="random-toggle-container">
+                            <div class="random-toggle-label">
+                                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.73 11.09l-1.41 1.41 3.13 3.13L14.5 22H20v-5.5l-2.04 2.04-2.73-2.73z"/></svg>
+                                <span><span class="label-desktop">Mode Aleatori</span><span class="label-mobile">Aleatori</span></span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="randomModeToggle" ${currentRoutineExecution.isRandom ? 'checked' : ''}>
+                                <span class="slider"></span>
+                            </label>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" id="randomModeToggle" ${currentRoutineExecution.isRandom ? 'checked' : ''}>
-                            <span class="slider"></span>
-                        </label>
-                    </div>
-                    <div class="random-toggle-container">
-                        <div class="random-toggle-label">
-                            <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M15 7v4h1V7h-1zm2 0v4h1V7h-1zm2 0v4h1V7h-1zM5 13h14v-2H5v2zm0 4h14v-2H5v2zM5 7v4h1V7H5zm2 0v4h1V7H7zm2 0v4h1V7H9zm2 0v4h1V7h-1z"/></svg>
-                            <span>Circuit</span>
+                        <div class="random-toggle-container">
+                            <div class="random-toggle-label">
+                                <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M15 7v4h1V7h-1zm2 0v4h1V7h-1zm2 0v4h1V7h-1zM5 13h14v-2H5v2zm0 4h14v-2H5v2zM5 7v4h1V7H5zm2 0v4h1V7H7zm2 0v4h1V7H9zm2 0v4h1V7h-1z"/></svg>
+                                <span><span class="label-desktop">Entrenament en circuit</span><span class="label-mobile">Circuit</span></span>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="circuitModeToggle" ${currentRoutineExecution.isCircuit ? 'checked' : ''}>
+                                <span class="slider"></span>
+                            </label>
                         </div>
-                        <label class="switch">
-                            <input type="checkbox" id="circuitModeToggle" ${currentRoutineExecution.isCircuit ? 'checked' : ''}>
-                            <span class="slider"></span>
-                        </label>
                     </div>
-                </div>
-                <div class="nav-btns-step">
-                    <button class="btn-step" id="prevStep" ${currentIndex === 0 ? 'disabled' : ''}>← Anterior</button>
-                    <span>${currentIndex + 1} / ${items.length}</span>
-                    <button class="btn-step" id="nextStep">${isLast ? 'Finalitzar' : 'Següent →'}</button>
+                    <div class="nav-btns-step">
+                        <button class="btn-step" id="prevStep" ${currentIndex === 0 ? 'disabled' : ''}>← Anterior</button>
+                        <span>${currentIndex + 1} / ${items.length}</span>
+                        <button class="btn-step" id="nextStep">${isLast ? 'Finalitzar' : 'Següent →'}</button>
+                    </div>
                 </div>
             `;
         } else {
             // Botó normal per a execució única
-            routineControls = `<button class="close-btn-action">Tancar</button>`;
+            routineControls = `
+                <div class="execution-footer">
+                    <p class="disclaimer-footer">
+                        Basat en les teves dades de perfil i el pes màxim de ${profile.maxWeight}kg.
+                    </p>
+                    <button class="close-btn-action">Tancar</button>
+                </div>
+            `;
         }
 
         const item = isRoutine ? currentRoutineExecution.items[currentRoutineExecution.currentIndex] : { id: exId, set: 1 };
@@ -340,9 +352,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
             <p class="modal-desc">${ex.instruccions}</p>
-            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 1.5rem;">
-                Basat en les teves dades de perfil i el pes màxim de ${profile.maxWeight}kg.
-            </p>
             ${routineControls}
         `;
         executionModal.classList.add('open');
