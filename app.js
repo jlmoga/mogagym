@@ -64,6 +64,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Elements Perfil
     const executionModal = document.getElementById('executionModal');
+    const detailModal = document.getElementById('detailModal');
+    const editRoutineModal = document.getElementById('editRoutineModal');
+    const saveRoutineModal = document.getElementById('saveRoutineModal');
     const profileForm = document.getElementById('profileForm');
     const closeModals = document.querySelectorAll('.close-modal, .close-btn-action');
     
@@ -80,9 +83,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnSaveRoutine = document.getElementById('saveRoutine');
     const btnCancelSelection = document.getElementById('cancelSelection');
     
-    // Elements Guardar Rutina Modal
-    const saveRoutineModal = document.getElementById('saveRoutineModal');
-    const routineNameInput = document.getElementById('routineNameInput');
     const btnConfirmSaveRoutine = document.getElementById('confirmSaveRoutine');
 
     let currentCategory = 'tots';
@@ -226,7 +226,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function showExerciseDetail(exId) {
         const ex = CATALEG_EXERCICIS.find(e => e.id === exId);
-        const detailModal = document.getElementById('detailModal');
         const detailContent = document.getElementById('detailContent');
         
         detailContent.innerHTML = `
@@ -602,10 +601,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- EDICIÓ DE RUTINES ---
     window.openEditRoutine = (index) => {
         const routine = routines[index];
-        const editModal = document.getElementById('editRoutineModal');
         const editContent = document.getElementById('editRoutineContent');
         
         const renderEditList = () => {
@@ -909,48 +906,46 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gestió del botó "Back" (History API)
     window.addEventListener('popstate', (event) => {
-        const detailModal = document.getElementById('detailModal');
-        const executionModal = document.getElementById('executionModal');
-        const saveRoutineModal = document.getElementById('saveRoutineModal');
-
-        // 1. Si hi ha modals oberts, els tanquem
-        // No fem 'return' aquí perquè si la URL ha canviat a una pestanya, hem de carregar-la.
-        let modalClosed = false;
-        if (detailModal.classList.contains('open')) {
-            detailModal.classList.remove('open');
-            modalClosed = true;
-        }
-        if (executionModal.classList.contains('open')) {
-            executionModal.classList.remove('open');
-            releaseWakeLock(); // Alliberar Wake Lock
-            modalClosed = true;
-        }
-        if (editRoutineModal.classList.contains('open')) {
-            editRoutineModal.classList.remove('open');
-            modalClosed = true;
-        }
-        if (saveRoutineModal.classList.contains('open')) {
-            saveRoutineModal.classList.remove('open');
-            modalClosed = true;
+        const state = event.state || {};
+        
+        // 1. Si hi ha modals oberts, els tanquem SEGONS L'ESTAT
+        // Si no hi ha 'modal' a l'estat, tanquem tots els modals que estiguin oberts
+        if (!state.modal) {
+            if (detailModal.classList.contains('open')) detailModal.classList.remove('open');
+            if (executionModal.classList.contains('open')) {
+                executionModal.classList.remove('open');
+                releaseWakeLock();
+            }
+            if (editRoutineModal && editRoutineModal.classList.contains('open')) editRoutineModal.classList.remove('open');
+            if (saveRoutineModal.classList.contains('open')) saveRoutineModal.classList.remove('open');
+        } else {
+            // Si hi ha un modal a l'estat, ens assegurem que només ELS ALTRES estiguin tancats
+            // (Per exemple, si tornem de execution a detail)
+            if (state.modal === 'detail') {
+                if (executionModal.classList.contains('open')) {
+                    executionModal.classList.remove('open');
+                    releaseWakeLock();
+                }
+                if (saveRoutineModal.classList.contains('open')) saveRoutineModal.classList.remove('open');
+                if (editRoutineModal && editRoutineModal.classList.contains('open')) editRoutineModal.classList.remove('open');
+            }
         }
 
         // 2. Gestionar el canvi de vista
         const currentHash = window.location.hash.replace('#', '') || 'catalog';
-        const viewToLoad = (event.state && event.state.view) ? event.state.view : currentHash;
+        const viewToLoad = state.view ? state.view : (['catalog', 'routines', 'profile'].includes(currentHash) ? currentHash : 'catalog');
         
-        // Si el hash no és un dels modals, forcem la càrrega de la vista
-        const validViews = ['catalog', 'routines', 'profile'];
-        if (validViews.includes(viewToLoad)) {
-            navegarA(viewToLoad, false);
-        } else if (modalClosed) {
-            // Si hem tancat un modal però el hash és un altre modal o invàlid,
-            // ens assegurem que almenys una secció sigui visible
-            const visibleSection = document.querySelector('.view-section:not(.hidden)');
-            if (!visibleSection) {
-                navegarA('catalog', false);
-            }
-        }
+        navegarA(viewToLoad, false);
     });
+
+    // Bridge per a Median.co / Apps Mòbils (Hardware Back Button)
+    window.median_library_ready = function() {
+        if (window.median && window.median.on) {
+            window.median.on('backButton', function() {
+                history.back();
+            });
+        }
+    };
 
     btnNewRoutine.addEventListener('click', () => {
         // Tornar al catàleg en mode selecció
@@ -1006,6 +1001,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Opcional: podríem mostrar un missatge de benvinguda
         } else {
             const initialView = window.location.hash.replace('#', '') || 'catalog';
+            history.replaceState({ view: initialView }, '', '#' + initialView);
             navegarA(initialView, false);
         }
         
