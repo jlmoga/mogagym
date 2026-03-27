@@ -98,11 +98,44 @@ document.addEventListener('DOMContentLoaded', () => {
     let routines = JSON.parse(localStorage.getItem('kora360_routines')) || [];
     let currentRoutineExecution = null;
     let profile = {
+        theme: 'dark',
         age: 30,
         sex: 'home',
         level: 'intermediate',
         maxWeight: 10
     };
+
+    // --- GESTIÓ DE WAKE LOCK (Pantalla encesa) ---
+    let wakeLock = null;
+
+    async function requestWakeLock() {
+        if ('wakeLock' in navigator) {
+            try {
+                wakeLock = await navigator.wakeLock.request('screen');
+                console.log('✅ Wake Lock actiu: La pantalla no s\'apagarà.');
+                
+                wakeLock.addEventListener('release', () => {
+                    console.log('🔓 Wake Lock alliberat.');
+                });
+            } catch (err) {
+                console.error(`❌ Error Wake Lock: ${err.message}`);
+            }
+        }
+    }
+
+    function releaseWakeLock() {
+        if (wakeLock !== null) {
+            wakeLock.release();
+            wakeLock = null;
+        }
+    }
+
+    // Re-adquirir el Wake Lock si la pestanya torna a ser visible
+    document.addEventListener('visibilitychange', async () => {
+        if (wakeLock !== null && document.visibilityState === 'visible') {
+            await requestWakeLock();
+        }
+    });
 
     // --- PERSISTÈNCIA (LocalStorage) ---
     function loadProfile() {
@@ -110,10 +143,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (saved) {
             profile = JSON.parse(saved);
             // Omplir el form amb dades guardades
+            if (profile.theme) document.getElementById('pTheme').value = profile.theme;
             document.getElementById('pAge').value = profile.age;
             document.getElementById('pSex').value = profile.sex;
             document.getElementById('pLevel').value = profile.level;
             document.getElementById('pMaxWeight').value = profile.maxWeight;
+            
+            if (profile.theme) applyTheme(profile.theme);
             return true;
         }
         return false;
@@ -122,6 +158,16 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveProfile(newData) {
         profile = newData;
         localStorage.setItem('moga_profile', JSON.stringify(profile));
+        if (profile.theme) applyTheme(profile.theme);
+    }
+
+    function applyTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        // També canviem el meta theme-color per a la barra d'adreces de Chrome/Android
+        const metaThemeColor = document.querySelector('meta[name="theme-color"]');
+        if (metaThemeColor) {
+            metaThemeColor.setAttribute('content', theme === 'light' ? '#3D5F90' : '#111318');
+        }
     }
 
     // --- LÒGICA D'ADAPTACIÓ ---
@@ -250,7 +296,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="random-toggle-container">
                         <div class="random-toggle-label">
                             <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M10.59 9.17L5.41 4 4 5.41l5.17 5.17 1.42-1.41zM14.5 4l2.04 2.04L4 18.59 5.41 20 17.96 7.45 20 9.5V4h-5.5zm.73 11.09l-1.41 1.41 3.13 3.13L14.5 22H20v-5.5l-2.04 2.04-2.73-2.73z"/></svg>
-                            <span>Mode Aleatori</span>
+                            <span>Aleatori</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="randomModeToggle" ${currentRoutineExecution.isRandom ? 'checked' : ''}>
@@ -260,7 +306,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="random-toggle-container">
                         <div class="random-toggle-label">
                             <svg viewBox="0 0 24 24" width="20" height="20"><path fill="currentColor" d="M15 7v4h1V7h-1zm2 0v4h1V7h-1zm2 0v4h1V7h-1zM5 13h14v-2H5v2zm0 4h14v-2H5v2zM5 7v4h1V7H5zm2 0v4h1V7H7zm2 0v4h1V7H9zm2 0v4h1V7h-1z"/></svg>
-                            <span>Entrenament en circuit</span>
+                            <span>Circuit</span>
                         </div>
                         <label class="switch">
                             <input type="checkbox" id="circuitModeToggle" ${currentRoutineExecution.isCircuit ? 'checked' : ''}>
@@ -300,6 +346,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ${routineControls}
         `;
         executionModal.classList.add('open');
+        requestWakeLock(); // Activar Wake Lock
         // Afegir estat a l'historial perquè el botó "Back" tanqui el modal
         history.pushState({ modal: 'execution' }, '', '#modal');
 
@@ -827,6 +874,7 @@ document.addEventListener('DOMContentLoaded', () => {
     profileForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const newData = {
+            theme: document.getElementById('pTheme').value,
             age: parseInt(document.getElementById('pAge').value),
             sex: document.getElementById('pSex').value,
             level: document.getElementById('pLevel').value,
@@ -835,6 +883,11 @@ document.addEventListener('DOMContentLoaded', () => {
         saveProfile(newData);
         updateDisplay();
         navTabs[0].click(); // Anar a explorar automàticament
+    });
+
+    // Canvi de tema immediat en seleccionar
+    document.getElementById('pTheme').addEventListener('change', (e) => {
+        applyTheme(e.target.value);
     });
 
     // Canvi de Pestanyes (Navegació)
@@ -860,6 +913,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         if (executionModal.classList.contains('open')) {
             executionModal.classList.remove('open');
+            releaseWakeLock(); // Alliberar Wake Lock
             modalClosed = true;
         }
         if (editRoutineModal.classList.contains('open')) {
