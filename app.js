@@ -1173,6 +1173,25 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    // Bridge per a Cordova (Hardware Back Button Android)
+    document.addEventListener("deviceready", () => {
+        document.addEventListener("backbutton", (e) => {
+            e.preventDefault();
+            
+            const currentHash = window.location.hash.replace('#', '');
+            const hasOpenModals = document.querySelector('.modal.open');
+            
+            // Si estem a la pantalla principal i sense modals, 
+            // no fem res per assegurar-nos que l'app no es tanqui en cap cas.
+            if ((currentHash === 'catalog' || currentHash === '') && !hasOpenModals) {
+                return;
+            }
+            
+            // En qualsevol altre cas, naveguem cap enrere a la vista anterior
+            history.back();
+        }, false);
+    }, false);
+
     btnNewRoutine.addEventListener('click', () => {
         // Tornar al catàleg en mode selecció
         navTabs[0].click();
