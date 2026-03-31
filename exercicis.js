@@ -89,7 +89,7 @@ const CATALEG_EXERCICIS = [
         complexitat: 1,
         equipament: "Paret",
         materials: ["pes_corporal"],
-        repeticions_suggerides: "3 sèries de 45-6 segons",
+        repeticions_suggerides: "3 sèries de 45-60 segons",
         instruccions: "Recolza l'esquena contra la paret i baixa fins que les cuixes estiguin paral·leles a terra (angle de 90º). Mantén la posició estàtica, pressionant els talons contra el terra i l'esquena contra la paret.",
         benefici_salut: "Desenvolupa la resistència muscular als quàdriceps sense impacte articular, ideal per a la rehabilitació i l'estabilitat estructural."
     },
@@ -114,6 +114,50 @@ const CATALEG_EXERCICIS = [
         repeticions_suggerides: "3 sèries de 10 repeticions per cama",
         instruccions: "Dret, amb una cama recolzada en una banqueta o cadira. Flexiona el tors endavant sense arquejar l'esquena fins a sentir l'estirament als isquios, i torna a la posició inicial.",
         benefici_salut: "Millora l'estabilitat unilateral i la flexibilitat activa de la part posterior de la cuixa."
+    },
+    {
+        id: "cames-11",
+        nom: "Esquat isomètric a la paret amb pilota",
+        categoria: "Cames",
+        complexitat: 2,
+        equipament: "Pilota suïssa (Fitball), Paret",
+        materials: ["pilota", "pes_corporal"],
+        repeticions_suggerides: "3 sèries aguantant entre 30 i 60 segons",
+        instruccions: "Col·loca la pilota entre la teva zona lumbar i la paret. Amb els peus separats a l'amplada de les espatlles, baixa el cos lliscant sobre la pilota fins que els genolls formin un angle de 90 graus. Manté la posició.",
+        benefici_salut: "Molt segur per a la gent amb dolors d'esquena, ja que la pilota guia el moviment i protegeix la curvatura lumbar mentre es genera una gran resistència muscular a les cuixes."
+    },
+    {
+        id: "cames-12",
+        nom: "Estocada lliscant posterior (Reverse Lunge)",
+        categoria: "Cames",
+        complexitat: 3,
+        equipament: "Màquina de rem",
+        materials: ["rem", "pes_corporal"],
+        repeticions_suggerides: "3 sèries de 12 repeticions per cama",
+        instruccions: "Posa't dempeus al costat de la màquina, mirant cap endavant. Posa un peu a terra i l'altre sobre el seient. Fes lliscar el seient cap enrere mentre flexiones la cama de terra, baixant el maluc. La resistència de la màquina (si agafes el mànec amb una mà) pot ajudar-te a estabilitzar-te.",
+        benefici_salut: "Treballa l'estabilitat del genoll en un pla dinàmic. Perfecte per simular el lliscament controlat en tarteres o terrenys tous."
+    },
+    {
+        id: "cames-13",
+        nom: "Elevació de Tibials (Tibialis Raise)",
+        categoria: "Cames",
+        complexitat: 2,
+        equipament: "Una paret",
+        materials: ["pes_corporal"],
+        repeticions_suggerides: "3 sèries de 20 repeticions (fins a notar la cremor)",
+        instruccions: "Recolza l'esquena a la paret i avança els peus uns 30-40 cm. Amb les cames rectes, eleva les puntes dels peus cap amunt tant com puguis, aguantant un segon a dalt, i baixa lentament.",
+        benefici_salut: "Enforteix el tibial anterior. És el 'fre de mà' del cos. Si aquest múscul és fort, els teus genolls no patiran en el descens. Prevé la periostitis tibial."
+    },
+    {
+        id: "cames-14",
+        nom: "Estocada caminant amb pes",
+        categoria: "Cames",
+        complexitat: 3,
+        equipament: "Dues peses (mancuernes)",
+        materials: ["peses"],
+        repeticions_suggerides: "3 sèries de 10-12 passos (5-6 per cama)",
+        instruccions: "Comença dempeus subjectant una pesa a cada mà amb els braços estesos als costats, tot seguit fes un pas llarg cap endavant i flexiona ambdós genolls fins que el de darrere gairebé toqui terra, assegurant-te que el genoll de davant quedi a 90 graus i no sobrepassi la punta del peu, abans d'impulsar-te amb la cama de davant per tornar a la posició vertical mentre avances la cama de darrere per realitzar la següent estocada en un moviment continu.",
+        benefici_salut: "Desenvolupa una força concèntrica i excèntrica brutal, essencial per a les pujades amb molta inclinació i per controlar el descens. Millora la mobilitat del maluc."
     },
     // --- EMPENTA (PIT/ESPATLLES/TRÍCEPS) ---
     {
@@ -203,6 +247,17 @@ const CATALEG_EXERCICIS = [
         repeticions_suggerides: "3 sèries de 8-12 repeticions",
         instruccions: "Passa la goma per dalt de la teva esquena i subjecta-la amb les mans mentre fas flexions a terra. La goma afegeix resistència en la part final de l'empenta, quan els braços s'estenen.",
         benefici_salut: "Afegeix una corba de resistència variable que augmenta la potència muscular i la intensitat sense necessitat de pes extra."
+    },
+    {
+        id: "empenta-09",
+        nom: "Flexions amb peus sobre pilota",
+        categoria: "Empenta",
+        complexitat: 4,
+        equipament: "Pilota suïssa (Fitball)",
+        materials: ["pilota", "pes_corporal"],
+        repeticions_suggerides: "3 sèries de 8 a 12 repeticions",
+        instruccions: "Col·loca les mans a terra (amplada d'espatlles) i els peus o les tibies sobre la pilota. Manté el cos en línia recta (com una taula) mentre baixes el pit cap a terra i tornes a pujar.",
+        benefici_salut: "Augmenta la intensitat de la flexió tradicional en traslladar més pes al tren superior i obliga el core a treballar contínuament per no perdre l'equilibri."
     },
 
     // --- TRACCIÓ I CARDIO ---
@@ -296,6 +351,28 @@ const CATALEG_EXERCICIS = [
         instruccions: "Sostén un pes en una mà amb el braç paral·lel al cos. Eleva el braç lateralment fins a arribar a un angle de 90 graus (a l'alçada de l'espatlla). Baixa lentament per tornar a la posició inicial. Completa la sèrie i repeteix amb l'altre braç.",
         benefici_salut: "Aïllament eficaç del deltoide lateral, millorant l'amplada i l'estabilitat de l'espatlla."
     },
+    {
+        id: "traccio-09",
+        nom: "Rem invertit (per a tracció pura)",
+        categoria: "Tracció",
+        complexitat: 2,
+        equipament: "Màquina de rem",
+        materials: ["rem"],
+        repeticions_suggerides: "3 sèries de 15 repeticions",
+        instruccions: "Assegut a la màquina de rem, agafa el mànec. En lloc de fer el moviment de cames, manté-les fixes i centra't només a portar el mànec cap al pit amb els colzes ben oberts.",
+        benefici_salut: "Aïlla la musculatura de l'esquena superior, corregint la postura \"encorbada\" de qui porta motxilla o passa hores al PC."
+    },
+    {
+        id: "traccio-10",
+        nom: "Curl de bíceps amb goma (dempeus)",
+        categoria: "Tracció",
+        complexitat: 1,
+        equipament: "Goma de resistència (banda elàstica)",
+        materials: ["gomes", "pes_corporal"],
+        repeticions_suggerides: "3 sèries de 12-15 repeticions",
+        instruccions: "Posa't dempeus i trepitja la goma amb els dos peus (o amb un, per menys resistència) al centre. Agafa els extrems de la goma amb les mans, amb els palmells mirant cap endavant. Mantenint els colzes enganxats al cos, flexiona els braços portant les mans cap a les espatlles. Baixa lentament.",
+        benefici_salut: "Treballa la força dels braços, amb la particularitat que la resistència de la goma augmenta a mesura que puges (quan el múscul està més contret), cosa que és excel·lent per a la salut de l'articulació del colze."
+    },
 
     // --- CORE ---
     {
@@ -374,6 +451,39 @@ const CATALEG_EXERCICIS = [
         repeticions_suggerides: "3 sèries de 30 segons per costat",
         instruccions: "Dret, de costat al punt d'ancoratge de la goma. Subjecta la goma amb les dues mans davant del pit i estira-la endavant fins a bloquejar braços. Lluita contra la goma que t'estira lateralment cap al punt fix.",
         benefici_salut: "Exercici d'anti-rotació que enforteix els oblics i le core profund per protegir la columna de forces laterals inesperades."
+    },
+    {
+        id: "core-08",
+        nom: "Intercanvi de pilota (V-Pass)",
+        categoria: "Core",
+        complexitat: 3,
+        equipament: "Pilota suïssa (Fitball), Estora",
+        materials: ["pilota", "pes_corporal"],
+        repeticions_suggerides: "3 sèries de 10 a 15 intercanvis (mà-peu-mà compta com a 2)",
+        instruccions: "Estirat d'esquena amb la pilota a les mans. Eleva braços i cames simultàniament per \"passar\" la pilota de les mans als peus (subjectant-la amb els turmells). Torna a baixar sense que la pilota ni les mans toquin terra, i repeteix l'intercanvi.",
+        benefici_salut: "Treballa la coordinació intermuscular i tota la cadena anterior del tronc, amb un èmfasi especial en el control motor de la zona lumbo-pèlvica."
+    },
+    {
+        id: "core-09",
+        nom: "Caminada del granger (Farmer's Walk)",
+        categoria: "Core",
+        complexitat: 1,
+        equipament: "Dues peses pesades",
+        materials: ["peses"],
+        repeticions_suggerides: "3 sèries de 45-60 segons de caminada",
+        instruccions: "Agafa una pesa a cada mà. Mantén l'esquena ben recta, les espatlles enrere (ben 'empaquetades') i la mirada al davant. Camina a passos curts i controlats durant el temps o distància fixats, evitant que el pes oscil·li.",
+        benefici_salut: "Simula el transport de material o el pes de la motxilla. Enforteix l'adherència (vital per a grimpades) i l'estabilitat del tronc davant forces d'asimetria."
+    },
+    {
+        id: "core-10",
+        nom: "Jefferson Curl",
+        categoria: "Core",
+        complexitat: 4,
+        equipament: "Banqueta i una pesa lleugera",
+        materials: ["banqueta", "peses"],
+        repeticions_suggerides: "3 sèries de 5-8 repeticions molt lentes i controlades",
+        instruccions: "Posa't dempeus sobre la banqueta. Amb les cames totalment rectes, comença a enrotllar la columna vèrtebra per vèrtebra, començant pel coll, baixant el pes cap als peus (i per sota del nivell de la banqueta si pots). Puja de la mateixa manera, desenrotllant-te lentament.",
+        benefici_salut: "Decompressió de la columna i flexibilitat activa dels isquiotibials. Prepara l'esquena per aguantar la tensió constant de les pujades pronunciades."
     },
     {
         id: "descans-01",

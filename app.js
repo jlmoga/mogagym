@@ -389,7 +389,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const item = isRoutine ? currentRoutineExecution.items[currentRoutineExecution.currentIndex] : { id: exId, set: 1 };
         const exItem = isRoutine ? CATALEG_EXERCICIS.find(e => e.id === item.id) : ex;
-        const goalText = goal.isCount ? `${goal.reps}${goal.extra}` : `SÈRIE ${item.set} de ${goal.sets} (${goal.reps} reps${goal.extra})`;
+        const goalText = goal.isCount ? `${goal.reps}${goal.extra}` : `SÈRIE ${item.set} de ${goal.sets} (${goal.reps} repeticions${goal.extra})`;
 
         const nomFitxer = ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`;
         content.innerHTML = `
@@ -1007,10 +1007,19 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderExercises(exercises) {
+        const totalExercises = CATALEG_EXERCICIS.filter(ex => !ex.ocult).length;
+        const counter = document.getElementById('exerciseCounter');
+        
         exerciseGrid.innerHTML = '';
         if (exercises.length === 0) {
             exerciseGrid.innerHTML = `<div class="loading"><p>No hi ha exercicis...</p></div>`;
+            if (counter) counter.classList.add('hidden');
             return;
+        }
+
+        if (counter) {
+            counter.classList.remove('hidden');
+            counter.innerText = `${exercises.length} exercicis de ${totalExercises} al catàleg`;
         }
 
         exercises.forEach(ex => {
