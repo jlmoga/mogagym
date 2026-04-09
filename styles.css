@@ -1337,8 +1337,8 @@ h1, h2, h3 {
     background: rgba(171, 199, 255, 0.05);
     padding: 0.8rem 1.2rem;
     border-radius: 16px;
-    margin-bottom: 1.5rem;
     border: 1px solid var(--border-color);
+    width: 100%;
 }
 
 .random-toggle-label {
@@ -1464,12 +1464,7 @@ input:checked + .slider:before {
     border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-.random-toggle-container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-}
+
 
 /* Responsivitat d'etiquetes i peus */
 .label-mobile { display: none; }
@@ -1488,12 +1483,49 @@ input:checked + .slider:before {
 }
 
 @media (max-width: 600px) {
+    #executionModal.modal {
+        padding: 0 !important;
+        align-items: stretch !important;
+        background: var(--bg-dark) !important;
+    }
+
+    #executionModal .modal-content.execution-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: 100% !important;
+        min-height: 100vh !important;
+        border-radius: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        margin: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        padding: 1.5rem !important;
+        transform: none !important;
+        animation: none !important;
+    }
+
+    div#executionModal.modal.open {
+        display: flex !important;
+    }
+
+    #executionContent {
+        display: flex !important;
+        flex-direction: column !important;
+        flex-grow: 1 !important;
+    }
+
     .label-mobile { display: inline; }
     .label-desktop { display: none; }
 
     .execution-footer {
         display: flex;
         flex-direction: column;
+    }
+
+    .progress-container {
+        margin-top: auto !important;
+        margin-bottom: 1.5rem !important;
     }
 
     .nav-btns-step {
@@ -1505,8 +1537,10 @@ input:checked + .slider:before {
         order: 2;
         flex-direction: row;
         gap: 0.5rem;
-        padding: 0.8rem;
+        padding: 0.6rem;
         margin-bottom: 0;
+        background: rgba(255, 255, 255, 0.02);
+        border-radius: 16px;
     }
     
     .disclaimer-footer {
@@ -1520,25 +1554,36 @@ input:checked + .slider:before {
     }
     
     .random-toggle-container {
-        flex-direction: column;
+        flex-direction: row !important;
         gap: 0.4rem;
         flex: 1;
-        padding: 0.5rem;
+        padding: 0.5rem 0.6rem;
         background: rgba(255, 255, 255, 0.03);
         border-radius: 12px;
-        justify-content: center;
+        justify-content: space-between !important;
+        align-items: center !important;
+        min-width: 0; /* Permet que s'encongeixi si cal */
     }
     
     .random-toggle-label {
         font-size: 0.75rem;
-        flex-direction: column;
-        gap: 0.2rem;
-        text-align: center;
+        flex-direction: row;
+        gap: 0.4rem;
+        text-align: left;
+        white-space: nowrap;
+        overflow: hidden;
     }
     
     .random-toggle-label svg {
-        width: 16px;
-        height: 16px;
+        width: 14px;
+        height: 14px;
+        opacity: 0.7;
+        flex-shrink: 0;
+    }
+
+    .random-toggle-label span {
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 }
 
