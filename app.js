@@ -298,7 +298,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             </div>
 
-            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <div class="modal-footer-actions">
                 <button class="save-btn" style="margin-top: 0; width: 100%;" onclick="window.openExecutionModal('${ex.id}'); document.getElementById('detailModal').classList.remove('open');">
                     Començar entrenament
                 </button>
