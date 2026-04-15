@@ -8,6 +8,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-01",
         nom: "Esquat amb peses",
+        imatge: "esquat-amb-peses",
         categoria: "Cames",
         complexitat: 3,
         equipament: "Peses (mancuernes)",
@@ -19,6 +20,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-02",
         nom: "Estocada búlgara (peu a banqueta)",
+        imatge: "estocada-bulgara-peu-a-banqueta",
         categoria: "Cames",
         complexitat: 4,
         equipament: "Banqueta, peses (opcional)",
@@ -30,6 +32,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-03",
         nom: "Step-up (pujar a banqueta)",
+        imatge: "step-up-pujar-a-banqueta",
         categoria: "Cames",
         complexitat: 2,
         equipament: "Banqueta, peses (opcional)",
@@ -41,6 +44,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-04",
         nom: "Pont de gluti amb goma",
+        imatge: "pont-de-gluti-amb-goma",
         categoria: "Cames",
         complexitat: 2,
         equipament: "Goma elàstica de resistència",
@@ -52,6 +56,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-05",
         nom: "Pes mort amb peses",
+        imatge: "pes-mort-amb-peses",
         categoria: "Cames",
         complexitat: 3,
         equipament: "Peses (mancuernes)",
@@ -63,6 +68,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-06",
         nom: "Caminada lateral amb goma",
+        imatge: "caminada-lateral-amb-goma",
         categoria: "Cames",
         complexitat: 2,
         equipament: "Goma elàstica (mini-band)",
@@ -74,6 +80,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-07",
         nom: "Elevació de talons (assegut amb peses)",
+        imatge: "elevacio-de-talons-assegut-amb-peses",
         categoria: "Cames",
         complexitat: 2,
         equipament: "Banqueta, Peses",
@@ -85,6 +92,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-08",
         nom: "Esquat isomètric a la paret",
+        imatge: "esquat-isometric-a-la-paret",
         categoria: "Cames",
         complexitat: 1,
         equipament: "Paret",
@@ -96,6 +104,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-09",
         nom: "Isquios amb pilota",
+        imatge: "isquios-amb-pilota",
         categoria: "Cames",
         complexitat: 4,
         equipament: "Pilota suïssa (Fitball)",
@@ -107,6 +116,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-10",
         nom: "Isquios a una cama",
+        imatge: "isquios-a-una-cama",
         categoria: "Cames",
         complexitat: 3,
         equipament: "Pes corporal",
@@ -118,6 +128,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-11",
         nom: "Esquat isomètric a la paret amb pilota",
+        imatge: "esquat-isometric-a-la-paret-amb-pilota",
         categoria: "Cames",
         complexitat: 2,
         equipament: "Pilota suïssa (Fitball), Paret",
@@ -129,6 +140,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-12",
         nom: "Estocada lliscant posterior (Reverse Lunge)",
+        imatge: "estocada-lliscant-posterior-reverse-lunge",
         categoria: "Cames",
         complexitat: 3,
         equipament: "Màquina de rem",
@@ -140,6 +152,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-13",
         nom: "Elevació de Tibials (Tibialis Raise)",
+        imatge: "elevacio-de-tibials-tibialis-raise",
         categoria: "Cames",
         complexitat: 2,
         equipament: "Una paret",
@@ -151,6 +164,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "cames-14",
         nom: "Estocada caminant amb pes",
+        imatge: "estocada-caminant-amb-pes",
         categoria: "Cames",
         complexitat: 3,
         equipament: "Dues peses (mancuernes)",
@@ -163,6 +177,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "empenta-01",
         nom: "Press de banca amb peses",
+        imatge: "press-de-banca-amb-peses",
         categoria: "Empenta",
         complexitat: 3,
         equipament: "Banqueta, Peses",
@@ -174,6 +189,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "empenta-02",
         nom: "Obertures de pit a la banqueta",
+        imatge: "obertures-de-pit-a-la-banqueta",
         categoria: "Empenta",
         complexitat: 3,
         equipament: "Banqueta, Peses",
@@ -185,6 +201,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "empenta-03",
         nom: "Flexions inclinades (mans a banqueta)",
+        imatge: "flexions-inclinades-mans-a-banqueta",
         categoria: "Empenta",
         complexitat: 2,
         equipament: "Banqueta",
@@ -196,6 +213,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "empenta-04",
         nom: "Press militar assegut",
+        imatge: "press-militar-assegut",
         categoria: "Empenta",
         complexitat: 3,
         equipament: "Banqueta, Peses",
@@ -207,6 +225,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "empenta-05",
         nom: "Elevacions laterals amb gomes o peses",
+        imatge: "elevacions-laterals-amb-gomes-o-peses",
         categoria: "Empenta",
         complexitat: 2,
         equipament: "Gomes o Peses",
@@ -218,6 +237,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "empenta-06",
         nom: "Fons de tríceps a la banqueta",
+        imatge: "fons-de-triceps-a-la-banqueta",
         categoria: "Empenta",
         complexitat: 3,
         equipament: "Banqueta",
@@ -229,6 +249,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "empenta-07",
         nom: "Press francès amb peses",
+        imatge: "press-frances-amb-peses",
         categoria: "Empenta",
         complexitat: 3,
         equipament: "Banqueta, Peses",
@@ -240,6 +261,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "empenta-08",
         nom: "Flexions amb goma a l'esquena",
+        imatge: "flexions-amb-goma-a-l-esquena",
         categoria: "Empenta",
         complexitat: 4,
         equipament: "Goma elàstica",
@@ -251,6 +273,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "empenta-09",
         nom: "Flexions amb peus sobre pilota",
+        imatge: "flexions-amb-peus-sobre-pilota",
         categoria: "Empenta",
         complexitat: 4,
         equipament: "Pilota suïssa (Fitball)",
@@ -264,6 +287,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-01",
         nom: "Màquina de rem",
+        imatge: "maquina-de-rem",
         categoria: "Tracció",
         complexitat: 5,
         equipament: "Màquina de rem",
@@ -277,6 +301,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-02",
         nom: "Rem a una mà (recolzat a banqueta)",
+        imatge: "rem-a-una-ma-recolzat-a-banqueta",
         categoria: "Tracció",
         complexitat: 3,
         equipament: "Banqueta, Peses",
@@ -288,6 +313,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-03",
         nom: "Rem amb gomes (punt fix)",
+        imatge: "rem-amb-gomes-punt-fix",
         categoria: "Tracció",
         complexitat: 2,
         equipament: "Goma elàstica, Punt fix",
@@ -299,6 +325,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-04",
         nom: "Curl de bíceps dempeus",
+        imatge: "curl-de-biceps-dempeus",
         categoria: "Tracció",
         complexitat: 2,
         equipament: "Peses or Goma",
@@ -310,6 +337,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-05",
         nom: "Curl de bíceps concentrat",
+        imatge: "curl-de-biceps-concentrat",
         categoria: "Tracció",
         complexitat: 3,
         equipament: "Banqueta, Peses",
@@ -321,6 +349,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-06",
         nom: "Face-pull amb gomes",
+        imatge: "face-pull-amb-gomes",
         categoria: "Tracció",
         complexitat: 4,
         equipament: "Goma elàstica, Punt fix",
@@ -332,6 +361,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-07",
         nom: "Rem vertical amb peses",
+        imatge: "rem-vertical-amb-peses",
         categoria: "Tracció",
         complexitat: 3,
         equipament: "Peses",
@@ -343,6 +373,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-08",
         nom: "Elevacions laterals",
+        imatge: "elevacions-laterals",
         categoria: "Tracció i cardio",
         complexitat: 2,
         equipament: "Pes (mancuerna)",
@@ -354,6 +385,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-09",
         nom: "Rem invertit (per a tracció pura)",
+        imatge: "rem-invertit-per-a-traccio-pura",
         categoria: "Tracció",
         complexitat: 2,
         equipament: "Màquina de rem",
@@ -365,6 +397,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "traccio-10",
         nom: "Curl de bíceps amb goma (dempeus)",
+        imatge: "curl-de-biceps-amb-goma-dempeus",
         categoria: "Tracció",
         complexitat: 1,
         equipament: "Goma de resistència (banda elàstica)",
@@ -378,6 +411,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-01",
         nom: "Planxa abdominal",
+        imatge: "planxa-abdominal",
         categoria: "Core",
         complexitat: 3,
         equipament: "Terra (estoreta)",
@@ -389,6 +423,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-02",
         nom: "Gir rus amb pesa",
+        imatge: "gir-rus-amb-pesa",
         categoria: "Core",
         complexitat: 3,
         equipament: "Pesa (mancuerna)",
@@ -400,6 +435,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-03",
         nom: "Deadbug",
+        imatge: "deadbug",
         categoria: "Core",
         complexitat: 4,
         equipament: "Terra (estoreta)",
@@ -411,6 +447,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-04",
         nom: "Woodchopper amb gomes",
+        imatge: "woodchopper-amb-gomes",
         categoria: "Core",
         complexitat: 4,
         equipament: "Goma elàstica, Punt fix",
@@ -422,6 +459,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-05",
         nom: "Elevació de cames (estirat a banqueta)",
+        imatge: "elevacio-de-cames-estirat-a-banqueta",
         categoria: "Core",
         complexitat: 3,
         equipament: "Banqueta",
@@ -433,6 +471,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-06",
         nom: "Superman a terra",
+        imatge: "superman-a-terra",
         categoria: "Core",
         complexitat: 2,
         equipament: "Terra (estoreta)",
@@ -444,6 +483,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-07",
         nom: "Press Pallof amb gomes",
+        imatge: "press-pallof-amb-gomes",
         categoria: "Core",
         complexitat: 4,
         equipament: "Goma elàstica, Punt fix",
@@ -455,6 +495,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-08",
         nom: "Intercanvi de pilota (V-Pass)",
+        imatge: "intercanvi-de-pilota-v-pass",
         categoria: "Core",
         complexitat: 3,
         equipament: "Pilota suïssa (Fitball), Estora",
@@ -466,6 +507,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-09",
         nom: "Caminada del granger (Farmer's Walk)",
+        imatge: "caminada-del-granger-farmer-s-walk",
         categoria: "Core",
         complexitat: 1,
         equipament: "Dues peses pesades",
@@ -477,6 +519,7 @@ const CATALEG_EXERCICIS = [
     {
         id: "core-10",
         nom: "Jefferson Curl",
+        imatge: "jefferson-curl",
         categoria: "Core",
         complexitat: 4,
         equipament: "Banqueta i una pesa lleugera",
@@ -486,8 +529,241 @@ const CATALEG_EXERCICIS = [
         benefici_salut: "Decompressió de la columna i flexibilitat activa dels isquiotibials. Prepara l'esquena per aguantar la tensió constant de les pujades pronunciades."
     },
     {
+        id: "cardio-01",
+        nom: "Escaladors (Mountain Climbers)",
+        categoria: "Cardio",
+        complexitat: 2,
+        equipament: "Pes corporal",
+        imatge: "mountain-climbers",
+        materials: ["pes_corporal"],
+        repeticions_suggerides: "3 sèries de 45 segons",
+        instruccions: "Col·loca't en posició de planxa alta amb les mans sota les espatlles i el cos recte. Alterna ràpidament el moviment dels genolls cap al pit, com si estiguessis corrent en horitzontal.",
+        benefici_salut: "Treball cardiovascular intens que enforteix el core i millora la coordinació.",
+        translations: {
+            ca: {
+                nom: "Escaladors (Mountain Climbers)",
+                instruccions: "Col·loca't en posició de planxa alta amb les mans sota les espatlles i el cos recte. Alterna ràpidament el moviment dels genolls cap al pit, com si estiguessis corrent en horitzontal. Mantén el maluc baix i el focus en l'estabilitat del tronc per evitar el balanceig excessiu.",
+                benefici: "Treball cardiovascular intens que enforteix el core, millora la coordinació i augmenta la potència explosiva del tren inferior."
+            },
+            es: {
+                nom: "Escaladores (Mountain Climbers)",
+                instruccions: "Colócate en posición de plancha alta con las manos bajo los hombros y el cuerpo recto. Alterna rápidamente el movimiento de las rodillas hacia el pecho, como si estuvieras corriendo en horizontal. Mantén la cadera baja y el foco en la estabilidad del tronco para evitar balanceos excesivos.",
+                benefici: "Trabajo cardiovascular intenso que fortalece el core, mejora la coordinación y aumenta la potencia explosiva del tren inferior."
+            },
+            en: {
+                nom: "Mountain Climbers",
+                instruccions: "Get into a high plank position with your hands under your shoulders and your body straight. Rapidly alternate driving your knees toward your chest, as if running horizontally. Keep your hips low and focus on core stability to prevent excessive swaying.",
+                benefici: "Intense cardiovascular workout that strengthens the core, improves coordination, and increases explosive power in the lower body."
+            }
+        }
+    },
+    {
+        id: "cardio-02",
+        nom: "Burpees (adaptats)",
+        categoria: "Cardio",
+        complexitat: 4,
+        equipament: "Pes corporal",
+        imatge: "burpees-adaptats",
+        materials: ["pes_corporal"],
+        repeticions_suggerides: "3 sèries de 12 repeticions",
+        instruccions: "Esquat, planxa, flexió i salt. Sense impacte si cal.",
+        benefici_salut: "Alta despesa calòrica i treball de potència total.",
+        translations: {
+            ca: {
+                nom: "Burpees (adaptats)",
+                instruccions: "Comença d'esquena dreta, baixa en un esquat fins a tocar terra amb les mans, salta o camina cap enrere fins a la posició de planxa, realitza una flexió si el teu nivell ho permet, torna els peus cap a les mans i finalitza amb un salt vertical estenent els braços. Es pot realitzar sense salt per reduir l'impacte.",
+                benefici: "Exercici de cos sencer extremadament eficaç per cremar calories, millorar la resistència cardiopulmonar i la coordinació motora."
+            },
+            es: {
+                nom: "Burpees (adaptados)",
+                instruccions: "Comienza con la espalda recta, baja en una sentadilla hasta tocar el suelo con las manos, salta o camina hacia atrás hasta la posición de plancha, realiza una flexión si tu nivel lo permite, devuelve los pies hacia las manos y finaliza con un salto vertical extendiendo los brazos. Se puede realizar sin salto para reducir el impacto.",
+                benefici: "Ejercicio de cuerpo completo extremadamente eficaz para quemar calorías, mejorar la resistencia cardiopulmonar y la coordinación motora."
+            },
+            en: {
+                nom: "Burpees (adapted)",
+                instruccions: "Start with a straight back, drop into a squat until your hands touch the floor, jump or step back into a plank position, perform a push-up if your level allows, return your feet to your hands, and finish with a vertical jump extending your arms. Can be performed without the jump to reduce impact.",
+                benefici: "Extremely effective full-body exercise for burning calories, improving cardiopulmonary endurance, and motor coordination."
+            }
+        }
+    },
+    {
+        id: "cardio-03",
+        nom: "Jumping Jacks (gomes)",
+        categoria: "Cardio",
+        complexitat: 2,
+        equipament: "Goma elàstica",
+        imatge: "jumping-jacks-gomes",
+        materials: ["gomes"],
+        repeticions_suggerides: "3 sèries de 1 minut",
+        instruccions: "Salta obrint i tancant cames amb la goma als turmells.",
+        benefici_salut: "Enforteix abductors i millora la coordinació.",
+        translations: {
+            ca: {
+                nom: "Jumping Jacks (gomes)",
+                instruccions: "Col·loca una mini-banda al voltant dels teus turmells. Comença dempeus amb els braços als costats. Salta obrint les cames lateralment mentre eleves els braços per sobre del cap. Torna a la posició inicial de forma controlada, lluitant contra la resistència de la goma en tot moment.",
+                benefici: "Intensifica el treball lateral de les cames, especialment dels abductors i el gluti mitjà, alhora que manté el pols elevat."
+            },
+            es: {
+                nom: "Jumping Jacks (con gomas)",
+                instruccions: "Coloca una mini-banda alrededor de tus tobillos. Comienza de pie con los brazos a los lados. Salta abriendo las piernas lateralmente mientras elevas los brazos por encima de la cabeza. Vuelve a la posición inicial de forma controlada, luchando contra la resistencia de la goma en todo momento.",
+                benefici: "Intensifica el trabajo lateral de las piernas, especialmente de los abductores y el glúteo medio, a la vez que mantiene el pulso elevado."
+            },
+            en: {
+                nom: "Jumping Jacks (with bands)",
+                instruccions: "Place a mini-band around your ankles. Start standing with your arms at your sides. Jump opening your legs laterally while raising your arms above your head. Return to the starting position in a controlled manner, fighting against the band's resistance at all times.",
+                benefici: "Intensifies lateral leg work, especially of the abductors and gluteus medius, while keeping the heart rate elevated."
+            }
+        }
+    },
+    {
+        id: "cardio-04",
+        nom: "Salts del patinador (Skater Jumps)",
+        categoria: "Cardio",
+        complexitat: 3,
+        equipament: "Pes corporal",
+        imatge: "skater-jumps",
+        materials: ["pes_corporal"],
+        repeticions_suggerides: "3 sèries de 20 repeticions",
+        instruccions: "Salta lateralment d'un peu a l'altre rítmicament.",
+        benefici_salut: "Millora l'equilibri dinàmic i la força lateral.",
+        translations: {
+            ca: {
+                nom: "Salts del patinador (Skater Jumps)",
+                instruccions: "Fes un salt lateral ample cap a la dreta, aterrant sobre el peu dret i creuant la cama esquerra per darrere. Immediatament, impulsa't cap a l'esquerra fent el moviment contrari, com si fossis un patinador de velocitat. Utilitza els braços per guanyar impuls i mantenir l'equilibri.",
+                benefici: "Millora l'estabilitat lateral del genoll, l'equilibri dinàmic i la potència dels glutis i quàdriceps en moviments asimètrics."
+            },
+            es: {
+                nom: "Saltos del patinador (Skater Jumps)",
+                instruccions: "Realiza un salto lateral amplio hacia la derecha, aterrizando sobre el pie derecho y cruzando la pierna izquierda por detrás. Inmediatamente, impúlsate hacia la izquierda realizando el movimiento contrario, como si fueras un patinador de velocidad. Utiliza los brazos para ganar impulso y mantener el equilibrio.",
+                benefici: "Mejora la estabilidad lateral de la rodilla, el equilibrio dinámico y la potencia de los glúteos y cuádriceps en movimientos asimétricos."
+            },
+            en: {
+                nom: "Skater Jumps",
+                instruccions: "Perform a wide lateral jump to the right, landing on your right foot and crossing your left leg behind. Immediately propel yourself to the left performing the opposite movement, as if you were a speed skater. Use your arms for momentum and balance.",
+                benefici: "Improves lateral knee stability, dynamic balance, and power in the glutes and quads during asymmetrical movements."
+            }
+        }
+    },
+    {
+        id: "cardio-05",
+        nom: "Boxa a l'ombra (Shadow Boxing)",
+        categoria: "Cardio",
+        complexitat: 3,
+        equipament: "Peses lleugeres",
+        imatge: "shadow-boxing-peses",
+        materials: ["peses"],
+        repeticions_suggerides: "4 sèries de 1 minut",
+        instruccions: "Llança cops de puny controlats amb peses lleugeres.",
+        benefici_salut: "Tonificació de braços i agilitat cardiovascular.",
+        translations: {
+            ca: {
+                nom: "Boxa a l'ombra (Shadow Boxing)",
+                instruccions: "Subjecta una pesa lleugera a cada mà i col·loca't en posició de guàrdia. Llança cops de puny (jabs, cross i hams) de forma controlada i rítmica cap a un oponent imaginari. Mantén els genolls relaxats i els colzes a prop del cos, assegurant-te de no bloquejar l'articulació del colze en el cop.",
+                benefici: "Tonificació de braços i espatlles mentre millora l'agilitat cardiovascular i la coordinació ull-mà sota una lleugera sobrecàrrega."
+            },
+            es: {
+                nom: "Boxeo a la sombra (Shadow Boxing)",
+                instruccions: "Sujeta una pesa ligera en cada mano y colócate en posición de guardia. Lanza puñetazos (jabs, cross y ganchos) de forma controlada y rítmica hacia un oponente imaginario. Mantén las rodillas relajadas y los codos cerca del cuerpo, asegurándote de no bloquear la articulación del codo en el golpe.",
+                benefici: "Tonifica los brazos y los hombros mientras mejora la agilidad cardiovascular y la coordinación ojo-mano bajo una ligera sobrecarga."
+            },
+            en: {
+                nom: "Shadow Boxing",
+                instruccions: "Carry a light weight in each hand and get into a guard position. Throw punches (jabs, cross, and hooks) in a controlled and rhythmic manner toward an imaginary opponent. Keep your knees relaxed and elbows close to your body, making sure not to lock the elbow joint during the strike.",
+                benefici: "Tones arms and shoulders while improving cardiovascular agility and eye-hand coordination under a light overload."
+            }
+        }
+    },
+    {
+        id: "cardio-06",
+        nom: "Thrusters",
+        categoria: "Cardio",
+        complexitat: 4,
+        equipament: "Peses",
+        imatge: "thrusters",
+        materials: ["peses"],
+        repeticions_suggerides: "3 sèries de 15 repeticions",
+        instruccions: "Esquat i empenta de la càrrega sobre el cap.",
+        benefici_salut: "Exercici metabòlic complet (força + cardio).",
+        translations: {
+            ca: {
+                nom: "Thrusters",
+                instruccions: "Sostén les peses a l'alçada de les espatlles. Baixa en un esquat profund mantenint l'esquena recta i el pes als talons. En pujar, aprofita l'impuls de les cames per estendre els braços i llançar les peses per sobre del cap en un moviment fluid i continu.",
+                benefici: "Un dels moviments més complets per a la condició física general, combinant la força de les cames amb l'empenta vertical d'espatlles i un gran consum d'oxigen."
+            },
+            es: {
+                nom: "Thrusters",
+                instruccions: "Sujeta las pesas a la altura de los hombros. Baja en una sentadilla profunda manteniendo la espalda recta y el peso en los talones. Al subir, aprovecha el impulso de las piernas para extender los brazos y lanzar las pesas por encima de la cabeza en un movimiento fluido y continuo.",
+                benefici: "Uno de los movimientos más completos para la condición física general, combinando la fuerza de las piernas con el empuje vertical de hombros y un gran consumo de oxígeno."
+            },
+            en: {
+                nom: "Thrusters",
+                instruccions: "Hold the weights at shoulder height. Drop into a deep squat keeping your back straight and your weight on your heels. As you rise, use the momentum from your legs to extend your arms and drive the weights overhead in one fluid and continuous movement.",
+                benefici: "One of the most comprehensive movements for overall fitness, combining leg strength with vertical shoulder drive and high oxygen consumption."
+            }
+        }
+    },
+    {
+        id: "cardio-07",
+        nom: "Salts laterals sobre banqueta (Bench Lateral Hops)",
+        categoria: "Cardio",
+        complexitat: 5,
+        equipament: "Banqueta",
+        imatge: "salts-laterals-banqueta",
+        materials: ["banqueta"],
+        repeticions_suggerides: "3 sèries de 30 segons",
+        instruccions: "Salta lateralment sobre la banqueta amb suport de mans.",
+        benefici_salut: "Desenvolupa l'agilitat explosiva extrema.",
+        translations: {
+            ca: {
+                nom: "Salts laterals sobre banqueta (Bench Lateral Hops)",
+                instruccions: "Col·loca't de costat a la banqueta i recolza-hi les mans amb força. Flexiona els genolls i impulsa't per saltar amb els dos peus alhora cap a l'altre costat de la banqueta, aterrant de forma suau. Mantén el pes sobre les mans per facilitar el desplaçament aeri.",
+                benefici: "Desenvolupa una agilitat explosiva extrema i coordina la força del tren superior amb la reactivitat de les cames."
+            },
+            es: {
+                nom: "Saltos laterales sobre banco (Bench Lateral Hops)",
+                instruccions: "Colócate de lado al banco y apoya las manos con fuerza. Flexiona las rodillas e impúlsate para saltar con ambos pies a la vez hacia el otro lado del banco, aterrizando de forma suave. Mantén el peso sobre las manos para facilitar el desplazamiento aéreo.",
+                benefici: "Desarrolla una agilidad explosiva extrema y coordina la fuerza del tren superior con la reactividad de las piernas."
+            },
+            en: {
+                nom: "Bench Lateral Hops",
+                instruccions: "Stand profile to the bench and place your hands firmly on it. Bend your knees and propel yourself to jump with both feet at once to the other side of the bench, landing softly. Keep your weight on your hands to facilitate the aerial movement.",
+                benefici: "Develops extreme explosive agility and coordinates upper body strength with leg reactivity."
+            }
+        }
+    },
+    {
+        id: "cardio-08",
+        nom: "Esquat amb salt (Jump Squat)",
+        categoria: "Cardio",
+        complexitat: 3,
+        equipament: "Pes corporal",
+        imatge: "esquat-amb-salt",
+        materials: ["pes_corporal"],
+        repeticions_suggerides: "3 sèries de 12 repeticions",
+        instruccions: "Fes un esquat i salta verticalment amb potència.",
+        benefici_salut: "Maximitza la potència explosiva de les cames.",
+        translations: {
+            ca: {
+                nom: "Esquat amb salt (Jump Squat)",
+                instruccions: "Baixa en posició d'esquat convencional fins que les cuixes estiguin paral·leles a terra. Des d'aquí, impulsa't amb explosivitat cap amunt realitzant un salt vertical tan alt com puguis. Aterra amb les puntes dels peus i flexiona els genolls immediatament per esmorteir l'impacte.",
+                benefici: "Augmenta dràsticament la potència del tren inferior (pliometria), millora la densitat òssia i eleva ràpidament la freqüència cardíaca."
+            },
+            es: {
+                nom: "Sentadilla con salto (Jump Squat)",
+                instruccions: "Baja en posición de sentadilla convencional hasta que los muslos estén paralelos al suelo. Desde aquí, impúlsate con explosividad hacia arriba realizando un salto vertical tan alto como puedas. Aterriza con las puntas de los pies y flexiona las rodillas inmediatamente para amortiguar el impacto.",
+                benefici: "Aumenta drásticamente la potencia del tren inferior (pliometría), mejora la densidad ósea y eleva rápidamente la frecuencia cardíaca."
+            },
+            en: {
+                nom: "Jump Squat",
+                instruccions: "Drop into a conventional squat position until your thighs are parallel to the floor. From there, explode upward performing a vertical jump as high as you can. Land on the balls of your feet and immediately bend your knees to cushion the impact.",
+                benefici: "Dramatically increases lower body power (plyometrics), improves bone density, and rapidly raises heart rate."
+            }
+        }
+    },
+    {
         id: "descans-01",
         nom: "Descans",
+        imatge: "descans",
         categoria: "Altres",
         ocult: true,
         complexitat: 1,

@@ -12,6 +12,32 @@ function generarNomFitxer(nom) {
         .replace(/^-+|-+$/g, '');        // Netejar guionets al principi i al final
 }
 
+let profile = {
+    theme: 'dark',
+    age: 30,
+    sex: 'home',
+    level: 'intermediate',
+    maxWeight: 10,
+    lang: 'ca'
+};
+
+// Funció per obtenir el contingut de l'exercici segons l'idioma
+function getExerciseContent(ex) {
+    const lang = profile.lang || 'ca';
+    if (ex.translations && ex.translations[lang]) {
+        return {
+            nom: ex.translations[lang].nom || ex.nom,
+            instruccions: ex.translations[lang].instruccions || ex.instruccions,
+            benefici_salut: ex.translations[lang].benefici || ex.benefici_salut
+        };
+    }
+    return {
+        nom: ex.nom,
+        instruccions: ex.instruccions,
+        benefici_salut: ex.benefici_salut
+    };
+}
+
 // Funció per generar les estrelles de complexitat
 function getComplexityStars(level) {
     const maxStars = 5;
@@ -125,13 +151,6 @@ document.addEventListener('DOMContentLoaded', () => {
         'intermediate': 2,
         'advanced': 3
     };
-    let profile = {
-        theme: 'dark',
-        age: 30,
-        sex: 'home',
-        level: 'intermediate',
-        maxWeight: 10
-    };
 
     // --- GESTIÓ DE WAKE LOCK (Pantalla encesa) ---
     let wakeLock = null;
@@ -189,6 +208,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById('pSex').value = profile.sex;
             document.getElementById('pLevel').value = profile.level;
             document.getElementById('pMaxWeight').value = profile.maxWeight;
+            document.getElementById('pLang').value = profile.lang || 'ca';
             
             if (profile.theme) applyTheme(profile.theme);
             return true;
@@ -271,12 +291,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function showExerciseDetail(exId) {
         const ex = CATALEG_EXERCICIS.find(e => e.id === exId);
         const detailContent = document.getElementById('detailContent');
+        const content = getExerciseContent(ex);
         
-        const nomFitxer = ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`;
+        const nomFitxer = ex.imatge ? `${ex.imatge}.jpg` : (ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`);
         detailContent.innerHTML = `
-            <h2>${ex.nom}</h2>
-            <img src="img/${nomFitxer}" class="modal-img-small" alt="${ex.nom}" 
-                 onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
+            <h2>${content.nom}</h2>
+            <img src="img/${nomFitxer}" class="modal-img-small" alt="${content.nom}" 
+                 onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(content.nom)}'">
             
             <div class="detail-complexity-box">
                 ${getComplexityStars(ex.complexitat || 3)}
@@ -288,13 +309,13 @@ document.addEventListener('DOMContentLoaded', () => {
             </div>
 
             <div id="pane-instruccions" class="tab-pane active">
-                <p class="modal-desc">${ex.instruccions}</p>
+                <p class="modal-desc">${content.instruccions}</p>
             </div>
             
             <div id="pane-beneficis" class="tab-pane">
                 <div class="benefit-box" style="margin-top: 0;">
                     <strong>Benefici principal:</strong>
-                    <p>${ex.benefici_salut}</p>
+                    <p>${content.benefici_salut}</p>
                 </div>
             </div>
 
@@ -390,20 +411,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const item = isRoutine ? currentRoutineExecution.items[currentRoutineExecution.currentIndex] : { id: exId, set: 1 };
         const exItem = isRoutine ? CATALEG_EXERCICIS.find(e => e.id === item.id) : ex;
         const goalText = goal.isCount ? `${goal.reps}${goal.extra}` : `SÈRIE ${item.set} de ${goal.sets} (${goal.reps} repeticions${goal.extra})`;
+        const content_ex = getExerciseContent(ex);
 
-        const nomFitxer = ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`;
+        const nomFitxer = ex.imatge ? `${ex.imatge}.jpg` : (ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`);
         content.innerHTML = `
-            <h2>${ex.nom}</h2>
+            <h2>${content_ex.nom}</h2>
             <div class="execution-header-compact">
-                <img src="img/${nomFitxer}" class="modal-img" alt="${ex.nom}" 
-                     onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
+                <img src="img/${nomFitxer}" class="modal-img" alt="${content_ex.nom}" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(content_ex.nom)}'">
                 <div class="goal-highlight">
                     <h4>El teu objectiu per avui:</h4>
                     <div class="goal-val">${goalText}</div>
                     ${getComplexityStars(ex.complexitat || 3)}
                 </div>
             </div>
-            <p class="modal-desc">${ex.instruccions}</p>
+            <p class="modal-desc">${content_ex.instruccions}</p>
             ${routineControls}
         `;
         if (!executionModal.classList.contains('open')) {
@@ -1027,19 +1049,20 @@ document.addEventListener('DOMContentLoaded', () => {
             const isSelected = selectedExercisesIds.includes(ex.id);
             card.className = `exercise-card ${isSelectionMode ? 'selecting' : ''} ${isSelected ? 'selected' : ''}`;
             
-            const nomFitxer = ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`;
+            const content = getExerciseContent(ex);
+            const nomFitxer = ex.imatge ? `${ex.imatge}.jpg` : (ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`);
             card.innerHTML = `
-                <img src="img/${nomFitxer}" alt="${ex.nom}" class="card-img" 
-                     onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(ex.nom)}'">
+                <img src="img/${nomFitxer}" alt="${content.nom}" class="card-img" 
+                     onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(content.nom)}'">
                 <div class="card-content">
                     <span class="category-tag">${ex.categoria}</span>
-                    <h3>${ex.nom}</h3>
+                    <h3>${content.nom}</h3>
                     ${getComplexityStars(ex.complexitat || 3)}
                     <span class="rep-tag">${ex.repeticions_suggerides}</span>
-                    <p class="instructions">${ex.instruccions}</p>
+                    <p class="instructions">${content.instruccions}</p>
                     <div class="benefit-box">
                         <strong>Benefici Salut:</strong>
-                        <p>${ex.benefici_salut}</p>
+                        <p>${content.benefici_salut}</p>
                     </div>
                     <button class="btn-quick-play" title="Executar ràpidament">▶</button>
                 </div>
@@ -1119,7 +1142,8 @@ document.addEventListener('DOMContentLoaded', () => {
             age: parseInt(document.getElementById('pAge').value),
             sex: document.getElementById('pSex').value,
             level: document.getElementById('pLevel').value,
-            maxWeight: parseInt(document.getElementById('pMaxWeight').value)
+            maxWeight: parseInt(document.getElementById('pMaxWeight').value),
+            lang: document.getElementById('pLang').value
         };
         saveProfile(newData);
         updateDisplay();
