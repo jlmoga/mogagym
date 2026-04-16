@@ -763,7 +763,6 @@ const CATALEG_EXERCICIS = [
     {
         id: "descans-01",
         nom: "Descans",
-        imatge: "descans",
         categoria: "Altres",
         ocult: true,
         complexitat: 1,

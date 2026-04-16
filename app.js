@@ -12,6 +12,21 @@ function generarNomFitxer(nom) {
         .replace(/^-+|-+$/g, '');        // Netejar guionets al principi i al final
 }
 
+// Funció centralitzada per obtenir la ruta de la imatge de l'exercici
+function getExerciseImage(ex) {
+    if (!ex) return 'https://placehold.co/400x200/111/4facfe?text=?';
+    // Cas especial: Descans (sempre PNG)
+    if (ex.id === 'descans-01' || ex.nom === 'Descans') {
+        return 'img/descans.png';
+    }
+    // Si l'exercici té un camp imatge definit, l'usem (per defecte JPG)
+    if (ex.imatge) {
+        return `img/${ex.imatge}.jpg`;
+    }
+    // Si no, generem el nom a partir del nom de l'exercici (per defecte JPG)
+    return `img/${generarNomFitxer(ex.nom)}.jpg`;
+}
+
 let profile = {
     theme: 'dark',
     age: 30,
@@ -39,7 +54,7 @@ function getExerciseContent(ex) {
 }
 
 // Funció per generar les estrelles de complexitat
-function getComplexityStars(level) {
+function getComplexityStars(level, showLabel = true) {
     const maxStars = 5;
     let starsHtml = '<div class="stars">';
     for (let i = 1; i <= maxStars; i++) {
@@ -47,6 +62,9 @@ function getComplexityStars(level) {
         starsHtml += `<span class="${starClass}">★</span>`;
     }
     starsHtml += '</div>';
+    
+    if (!showLabel) return starsHtml;
+
     return `
         <div class="complexity-container">
             <span class="complexity-label">Complexitat</span>
@@ -132,6 +150,25 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnCancelSelection = document.getElementById('cancelSelection');
     
     const btnConfirmSaveRoutine = document.getElementById('confirmSaveRoutine');
+    const routineNameInput = document.getElementById('routineNameInput');
+
+    // --- UTILS PER MODALS (Scroll Lock & Background Fix) ---
+    function openModal(modal) {
+        if (!modal) return;
+        modal.classList.add('open');
+        document.body.classList.add('modal-open');
+    }
+
+    function closeModal(modal) {
+        if (!modal) return;
+        modal.classList.remove('open');
+        // Només treiem la classe si no hi ha cap altre modal obert
+        setTimeout(() => {
+            if (!document.querySelector('.modal.open')) {
+                document.body.classList.remove('modal-open');
+            }
+        }, 100);
+    }
 
     let currentCategory = 'tots';
     let isSelectionMode = false;
@@ -293,10 +330,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const detailContent = document.getElementById('detailContent');
         const content = getExerciseContent(ex);
         
-        const nomFitxer = ex.imatge ? `${ex.imatge}.jpg` : (ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`);
+        const nomFitxer = getExerciseImage(ex);
         detailContent.innerHTML = `
             <h2>${content.nom}</h2>
-            <img src="img/${nomFitxer}" class="modal-img-small" alt="${content.nom}" 
+            <img src="${nomFitxer}" class="modal-img-small" alt="${content.nom}" 
                  onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(content.nom)}'">
             
             <div class="detail-complexity-box">
@@ -327,7 +364,7 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         
         if (!detailModal.classList.contains('open')) {
-            detailModal.classList.add('open');
+            openModal(detailModal);
             history.pushState({ modal: 'detail' }, '', '#detail');
         }
     }
@@ -413,11 +450,11 @@ document.addEventListener('DOMContentLoaded', () => {
         const goalText = goal.isCount ? `${goal.reps}${goal.extra}` : `SÈRIE ${item.set} de ${goal.sets} (${goal.reps} repeticions${goal.extra})`;
         const content_ex = getExerciseContent(ex);
 
-        const nomFitxer = ex.imatge ? `${ex.imatge}.jpg` : (ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`);
+        const nomFitxer = getExerciseImage(ex);
         content.innerHTML = `
             <h2>${content_ex.nom}</h2>
             <div class="execution-header-compact">
-                <img src="img/${nomFitxer}" class="modal-img" alt="${content_ex.nom}" 
+                <img src="${nomFitxer}" class="modal-img" alt="${content_ex.nom}" 
                      onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(content_ex.nom)}'">
                 <div class="goal-highlight">
                     <h4>El teu objectiu per avui:</h4>
@@ -429,7 +466,7 @@ document.addEventListener('DOMContentLoaded', () => {
             ${routineControls}
         `;
         if (!executionModal.classList.contains('open')) {
-            executionModal.classList.add('open');
+            openModal(executionModal);
             requestWakeLock(); // Activar Wake Lock
             // Afegir estat a l'historial perquè el botó "Back" tanqui el modal
             history.pushState({ modal: 'execution' }, '', '#modal');
@@ -840,14 +877,17 @@ document.addEventListener('DOMContentLoaded', () => {
             routine.exercises.forEach((exId, exIndex) => {
                 const ex = CATALEG_EXERCICIS.find(e => e.id === exId);
                 const exName = ex ? ex.nom : "Exercici desconegut";
-                const exImg = ex ? (ex.nom === 'Descans' ? 'img/descans.png' : `img/${generarNomFitxer(ex.nom)}.jpg`) : 'https://placehold.co/100x100/111/4facfe?text=?';
+                const exImg = getExerciseImage(ex);
                 
                 const li = document.createElement('li');
                 li.className = 'edit-item';
                 li.innerHTML = `
                     <div style="display: flex; align-items: center; gap: 1rem; flex: 1;">
                         <img src="${exImg}" class="edit-item-img" alt="${exName}" onerror="this.onerror=null;this.src='https://placehold.co/100x100/111/4facfe?text=?'">
-                        <span class="edit-item-name">${exName}</span>
+                        <div style="display: flex; flex-direction: column; gap: 0.2rem;">
+                           <span class="edit-item-name">${exName}</span>
+                           ${getComplexityStars(ex ? ex.complexitat : 3, false)}
+                        </div>
                     </div>
                     <div class="edit-controls">
                         <button class="btn-edit-control move-up" ${exIndex === 0 ? 'disabled' : ''} title="Moure amunt">↑</button>
@@ -893,7 +933,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         renderEditList();
-        editRoutineModal.classList.add('open');
+        openModal(editRoutineModal);
         history.pushState({ modal: 'editRoutine' }, '', '#edit');
 
         window.showAddExerciseList = (rIdx) => {
@@ -920,12 +960,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const renderAddExItems = (filteredList) => {
                 let itemsHtml = '';
                 filteredList.forEach(ex => {
-                    const exImg = ex.nom === 'Descans' ? 'img/descans.png' : `img/${generarNomFitxer(ex.nom)}.jpg`;
+                    const exImg = getExerciseImage(ex);
                     itemsHtml += `
                         <div class="add-exercise-item" onclick="window.addExerciseToRoutine(${rIdx}, '${ex.id}')">
                             <img src="${exImg}" class="edit-item-img" style="width: 40px; height: 40px;" onerror="this.onerror=null;this.src='https://placehold.co/100x100/111/4facfe?text=?'">
                             <div class="add-ex-info">
                                 <span class="add-ex-name">${ex.nom}</span>
+                                ${getComplexityStars(ex.complexitat || 3, false)}
                                 <span class="add-ex-cat">${ex.categoria}</span>
                             </div>
                             <button class="btn-edit-control">+</button>
@@ -1050,9 +1091,9 @@ document.addEventListener('DOMContentLoaded', () => {
             card.className = `exercise-card ${isSelectionMode ? 'selecting' : ''} ${isSelected ? 'selected' : ''}`;
             
             const content = getExerciseContent(ex);
-            const nomFitxer = ex.imatge ? `${ex.imatge}.jpg` : (ex.nom === 'Descans' ? 'descans.png' : `${generarNomFitxer(ex.nom)}.jpg`);
+            const nomFitxer = getExerciseImage(ex);
             card.innerHTML = `
-                <img src="img/${nomFitxer}" alt="${content.nom}" class="card-img" 
+                <img src="${nomFitxer}" alt="${content.nom}" class="card-img" 
                      onerror="this.onerror=null;this.src='https://placehold.co/400x200/111/4facfe?text=${encodeURIComponent(content.nom)}'">
                 <div class="card-content">
                     <span class="category-tag">${ex.categoria}</span>
@@ -1170,23 +1211,23 @@ document.addEventListener('DOMContentLoaded', () => {
         // 1. Si hi ha modals oberts, els tanquem SEGONS L'ESTAT
         // Si no hi ha 'modal' a l'estat, tanquem tots els modals que estiguin oberts
         if (!state.modal) {
-            if (detailModal.classList.contains('open')) detailModal.classList.remove('open');
+            closeModal(detailModal);
             if (executionModal.classList.contains('open')) {
-                executionModal.classList.remove('open');
+                closeModal(executionModal);
                 releaseWakeLock();
             }
-            if (editRoutineModal && editRoutineModal.classList.contains('open')) editRoutineModal.classList.remove('open');
-            if (saveRoutineModal.classList.contains('open')) saveRoutineModal.classList.remove('open');
+            closeModal(editRoutineModal);
+            closeModal(saveRoutineModal);
         } else {
             // Si hi ha un modal a l'estat, ens assegurem que només ELS ALTRES estiguin tancats
             // (Per exemple, si tornem de execution a detail)
             if (state.modal === 'detail') {
                 if (executionModal.classList.contains('open')) {
-                    executionModal.classList.remove('open');
+                    closeModal(executionModal);
                     releaseWakeLock();
                 }
-                if (saveRoutineModal.classList.contains('open')) saveRoutineModal.classList.remove('open');
-                if (editRoutineModal && editRoutineModal.classList.contains('open')) editRoutineModal.classList.remove('open');
+                closeModal(saveRoutineModal);
+                closeModal(editRoutineModal);
             }
         }
 
@@ -1241,7 +1282,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         routineNameInput.value = "";
-        saveRoutineModal.classList.add('open');
+        openModal(saveRoutineModal);
         history.pushState({ modal: 'saveRoutine' }, '', '#save');
         setTimeout(() => routineNameInput.focus(), 100);
     });
@@ -1251,7 +1292,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (name) {
             routines.push({ name, exercises: [...selectedExercisesIds] });
             saveRoutines();
-            saveRoutineModal.classList.remove('open');
+            closeModal(saveRoutineModal);
             toggleSelectionMode(false);
             navTabs[1].click(); // Anar a rutines
         } else {
